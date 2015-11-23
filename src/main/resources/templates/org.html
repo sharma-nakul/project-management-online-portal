@@ -1,0 +1,46 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+
+    <title>CMPE 275 Lab2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<h3 align="left">Organization API</h3>
+<table align="left" border="1" cellpadding="2" cellspacing="2">
+
+    <tr>
+        <td style="font-weight: normal">Id</td>
+        <td th:text="${organization.id}"></td>
+    </tr>
+    <tr>
+        <td style="font-weight: normal">Name</td>
+        <td th:text="${organization.name}"></td>
+    </tr>
+   <tr>
+       <td style="font-weight: normal">Description</td>
+       <td th:text="${organization.description}"></td>
+   </tr>
+    <tr>
+        <td style="font-weight: normal">Street</td>
+        <td th:text="${organization.address.street}"></td>
+    </tr>
+    <tr>
+        <td style="font-weight: normal">City</td>
+        <td th:text="${organization.address.city}"></td>
+    </tr>
+    <tr>
+        <td style="font-weight: normal">State</td>
+        <td th:text="${organization.address.state}"></td>
+    </tr>
+    <tr>
+        <td style="font-weight: normal">Zip</td>
+        <td th:text="${organization.address.zip}"></td>
+    </tr>
+
+</table>
+<div align="bottom">
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></div>
+<footer style="font-size: small">@Copyright</footer>
+<footer style="font-size: small">Nakul Sharma</footer>
+<footer style="font-size: small">San Jose State University</footer>
+<footer style="font-size: small">nakul.sharma@sjsu.edu</footer>
+</html>

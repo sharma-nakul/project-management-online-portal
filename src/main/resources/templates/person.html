@@ -1,0 +1,85 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+
+    <title>CMPE 275 Lab2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<h3 align="left">Person API</h3>
+<table align="left" border="0" cellpadding="2" cellspacing="2">
+    <tr>
+        <td>
+            <table align="left" border="1" cellpadding="2" cellspacing="2">
+
+                <tr>
+                    <td style="font-weight: normal">Id</td>
+                    <td th:text="${person.id}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: normal">First Name</td>
+                    <td th:text="${person.firstname}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: normal">Last Name</td>
+                    <td th:text="${person.lastname}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: normal">Description</td>
+                    <td th:text="${person.description}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: normal">Street</td>
+                    <td th:text="${person.address.street}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: normal">City</td>
+                    <td th:text="${person.address.city}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: normal">State</td>
+                    <td th:text="${person.address.state}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: normal">Zip</td>
+                    <td th:text="${person.address.zip}"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p style="font-weight: bold;" align="left">Ids of person's friends</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table align="left" border="1" cellpadding="2" cellspacing="2">
+                <tr th:each="friend : ${friends}">
+                    <td style="font-weight: normal">Id</td>
+                    <td th:text="${friend.id}"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <footer style="font-size: small">@Copyright</footer>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <footer style="font-size: small">Nakul Sharma</footer>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <footer style="font-size: small">San Jose State University</footer>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <footer style="font-size: small">nakul.sharma@sjsu.edu</footer>
+        </td>
+    </tr>
+</table>
+</html>
