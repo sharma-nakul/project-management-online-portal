@@ -3,7 +3,7 @@ package edu.sjsu.cmpe275.project.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Entity (name="TASK")
 @Table(name = "TASK")
 public class Task implements Serializable {
 
