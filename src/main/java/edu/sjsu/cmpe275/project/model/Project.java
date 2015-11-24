@@ -3,6 +3,7 @@ package edu.sjsu.cmpe275.project.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "PROJECT")
@@ -46,6 +47,8 @@ public class Project implements Serializable {
      * Constructor
      */
     public Project() {
+     tasks = new ArrayList<Task>();
+     invitations = new ArrayList<Invitation>();
     }
 
     public Project(String title, String description, User owner, List<Task> tasks, List<Invitation> invitations) {

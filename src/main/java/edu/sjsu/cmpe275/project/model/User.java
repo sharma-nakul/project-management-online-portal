@@ -3,6 +3,7 @@ package edu.sjsu.cmpe275.project.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "USER")
@@ -36,7 +37,7 @@ public class User implements Serializable {
 
      /** Projects owned by this user. */
     @OneToMany(mappedBy = "owner")
-    private List<User> projects;
+    private List<Project> projects;
 
      /** Tasks assigned this user. */
     @OneToMany(mappedBy = "assignee")
@@ -46,7 +47,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "participant")
     private List<Invitation> invitations;
 
-    public User(String name, String email, String password, List<User> projects, List<Task> tasks, List<Invitation> invitations) {
+    public User(String name, String email, String password, List<Project> projects, List<Task> tasks, List<Invitation> invitations) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -55,17 +56,29 @@ public class User implements Serializable {
         this.invitations = invitations;
     }
 
+     public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        projects = new ArrayList<Project>();
+        tasks = new ArrayList<Task>();
+        invitations = new ArrayList<Invitation>();
+    }
+
     /**
      * Constructor
      */
     public User() {
+        projects = new ArrayList<Project>();
+        tasks = new ArrayList<Task>();
+        invitations = new ArrayList<Invitation>();
     }
 
-    public List<User> getProjects() {
+    public List<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<User> projects) {
+    public void setProjects(List<Project> projects) {
         this.projects = projects;
     }
 
