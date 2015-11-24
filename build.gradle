@@ -38,5 +38,6 @@ dependencies {
     compile("com.h2database:h2")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile 'javax.servlet:jstl:1.2'
+    compile 'javax.ws.rs:jsr311-api:0.11'
 
 }

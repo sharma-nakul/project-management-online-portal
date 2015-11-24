@@ -4,12 +4,13 @@ import edu.sjsu.cmpe275.project.model.User;
 import edu.sjsu.cmpe275.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author Naks
@@ -20,6 +21,8 @@ public class UserController {
 
     @Autowired
     IUserService userService;
+
+    private HttpSession session = null;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -45,13 +48,15 @@ public class UserController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signUp(
-            @ModelAttribute(value="user") User user) {
+            @ModelAttribute(value="user") User user, HttpServletRequest request) {
         try {
             if (user.getName() != null && user.getEmail() != null && user.getPassword() != null) {
                 user = this.userService.createUser(user.getName(), user.getEmail(), user.getPassword());
+                session = request.getSession();
+                session.setAttribute("userDetails", user);
                 return "home";
             } else
-                return "Could not save the user at this time, please check your request or try later.";
+                    return "Could not save the user at this time, please check your request or try later.";
 
         } catch (DataIntegrityViolationException e) {
             return "Either email or name is not correct.";
@@ -65,10 +70,14 @@ public class UserController {
         return "signup";
     }
 
-    @RequestMapping(value="/user/{id}", method = RequestMethod.GET)
-    public String getPerson(@PathVariable("id") String id, Model model) {
-        User user = this.userService.getUser(Integer.valueOf(id));
-        model.addAttribute("user", user);
-        return "user";
+    @RequestMapping(value="/user", method = RequestMethod.GET)
+    public String getPerson(Model model, HttpServletRequest request) {
+      session = request.getSession();
+      User user = (User) session.getAttribute("userDetails");
+      if (user != null) {
+          model.addAttribute("user", user);
+          return "user";
+      }
+      return "error";
     }
 }
