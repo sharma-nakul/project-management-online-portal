@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+
+    <title>Project Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+            <form action="#" th:action="@{/signup}" th:object="${user}" method="post">
+                <h3 align="left">SIGN UP</h3>
+
+                <table>
+                    <tr>
+                        <td>Name</td>
+                        <td><input type="text" th:field="*{name}" /></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td><input type="text" th:field="*{email}" /></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td><input type="password" th:field="*{password}" /></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" /></td>
+                    </tr>
+                </table>
+             </form>
+</html>

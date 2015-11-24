@@ -31,7 +31,7 @@ public class UserServiceImpl implements IUserService {
     private IUserDao userDao;
 
     @Override
-    public long createUser(String name, String email,String password){
+    public User createUser(String name, String email,String password){
         User user = new User(name,email,password);
         return userDao.addUser(user);
     }

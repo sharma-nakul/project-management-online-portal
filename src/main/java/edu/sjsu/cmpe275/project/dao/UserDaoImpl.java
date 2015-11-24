@@ -26,12 +26,12 @@ public class UserDaoImpl extends AbstractDao implements IUserDao {
     private Session session;
 
     @Override
-    public long addUser(User user){
+    public User addUser(User user){
         session = getSession();
         session.save(user);
         session.flush();
         logger.info(user.getName() + " added successfully");
-        return user.getId();
+        return user;
     }
 
     @Override

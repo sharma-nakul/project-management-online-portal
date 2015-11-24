@@ -8,15 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+import org.springframework.stereotype.Controller;
 
 /**
  * @author Naks
  *
  */
-@RestController
-@RequestMapping(value = "user",
-        produces = {"application/xml", "application/json"},
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+@Controller
 public class UserController {
 
     @Autowired
@@ -31,7 +30,7 @@ public class UserController {
         try {
             User user;
             if (name != null && email != null) {
-                user = this.userService.addUser(name, email, password);
+                user = this.userService.createUser(name, email, password);
                 return new ResponseEntity<>(user, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not save the user at this time, please check your request or try later.", HttpStatus.BAD_REQUEST);
@@ -41,5 +40,35 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>("Invalid Request", HttpStatus.BAD_REQUEST);
         }
+    }
+
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String signUp(
+            @ModelAttribute(value="user") User user) {
+        try {
+            if (user.getName() != null && user.getEmail() != null && user.getPassword() != null) {
+                user = this.userService.createUser(user.getName(), user.getEmail(), user.getPassword());
+                return "home";
+            } else
+                return "Could not save the user at this time, please check your request or try later.";
+
+        } catch (DataIntegrityViolationException e) {
+            return "Either email or name is not correct.";
+        } catch (Exception e) {
+            return "Invalid Request";
+        }
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public String showSignUp(User user) {
+        return "signup";
+    }
+
+    @RequestMapping(value="/user/{id}", method = RequestMethod.GET)
+    public String getPerson(@PathVariable("id") String id, Model model) {
+        User user = this.userService.getUser(Integer.valueOf(id));
+        model.addAttribute("user", user);
+        return "user";
     }
 }
