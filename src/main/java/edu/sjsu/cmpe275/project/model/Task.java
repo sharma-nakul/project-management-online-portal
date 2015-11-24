@@ -32,7 +32,7 @@ public class Task implements Serializable {
     }
     /**
      * State of a task
-         */
+     */
     @Column(name = "STATE", nullable = false)
     private TaskState state;
 

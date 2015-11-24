@@ -29,6 +29,16 @@ public class Project implements Serializable {
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
+    public enum ProjectState {
+      PLANNING, ONGOING, CANCELLED, COMPLETED
+    }
+
+    /**
+     * State of a project
+     */
+    @Column(name = "STATE", nullable = false)
+    private ProjectState state;
+
     /** Owner of the project. */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OWNERID")
@@ -51,12 +61,22 @@ public class Project implements Serializable {
      invitations = new ArrayList<Invitation>();
     }
 
-    public Project(String title, String description, User owner, List<Task> tasks, List<Invitation> invitations) {
+    public Project(String title, String description, User owner, ProjectState state) {
         this.title = title;
         this.description = description;
         this.owner = owner;
-        this.tasks = tasks;
-        this.invitations = invitations;
+        this.tasks = new ArrayList<Task>();
+        this.invitations = new ArrayList<Invitation>();
+        this.state = state;
+    }
+
+
+    public ProjectState getState() {
+        return state;
+    }
+
+    public void setState(ProjectState state) {
+        this.state = state;
     }
 
     public List<Task> getTasks() {
