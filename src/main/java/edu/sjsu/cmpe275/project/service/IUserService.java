@@ -2,13 +2,15 @@ package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.model.User;
 
-
 /**
- * @author Nakul Sharma
- * Interface to deliver Person related services.
+ * @author Naks
+ * Interface to deliver User services.
  */
 public interface IUserService {
 
-    User addUser(String name, String email,String password);
+    long createUser(String name, String email,String password);
+    boolean editUser (String name, String email,String password);
+    boolean removeUser (long id);
+    User getUser (long id);
 
 }

@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 /**
- * @author Nakul Sharma
+ * @author Naks
  * Class to configure Hibernate properties, transaction and SQL drivers.
  * PropertySource annotation is used to fetch properties file from /resources folder
  */

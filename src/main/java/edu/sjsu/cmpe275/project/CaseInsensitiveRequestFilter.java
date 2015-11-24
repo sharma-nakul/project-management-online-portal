@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Configuration class
  * Wrapper to make url case insensitive
- * @author Nakul Sharma
+ * @author Naks
  */
 @Configuration
 @Component
@@ -60,7 +60,7 @@ public class CaseInsensitiveRequestFilter extends OncePerRequestFilter {
 
         /**
          * Method to get parameters from the URI
-         * @param name
+         * @param name name of parameter
          * @return Parameters in lower case
          */
         @Override

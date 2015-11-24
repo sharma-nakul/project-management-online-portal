@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author Nakul Sharma
+ * @author Naks
  * Class to configure application context
  * SpringBootApplication annotation search and add all the subclasses.
  */

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author Nakul Sharma
- * Handler class for Person. The class intercept REST call to persist or retrieve data.
+ * @author Naks
+ * Handler class for User. The class intercept REST call to persist or retrieve data.
  * Service annotation to mark the class as service class in application context
  * Transactional annotation to make the class transactional entity i.e. it will be
  * counted a single transaction
@@ -28,11 +28,32 @@ public class UserServiceImpl implements IUserService {
      * Autowire the Person DAO interface object in this class
      */
     @Autowired
-    private IUserDao personDao;
+    private IUserDao userDao;
 
     @Override
-    public User addUser(String name, String email,String password){
-        return personDao.addUser(name, email, password);
+    public long createUser(String name, String email,String password){
+        User user = new User(name,email,password);
+        return userDao.addUser(user);
+    }
+
+    @Override
+    public boolean editUser (String name, String email, String password)
+    {
+        User user = new User(name,email,password);
+        return userDao.updateUser(user);
+    }
+
+    @Override
+    public boolean removeUser(long id)
+    {
+        User user = userDao.getUser(id);
+        return userDao.deleteUser(user);
+    }
+
+    @Override
+    public User getUser(long id)
+    {
+        return userDao.getUser(id);
     }
 
 }

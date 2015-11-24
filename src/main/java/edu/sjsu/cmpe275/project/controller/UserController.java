@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by Naks on 23-Nov-15.
+ * @author Naks
+ *
  */
 @RestController
 @RequestMapping(value = "user",

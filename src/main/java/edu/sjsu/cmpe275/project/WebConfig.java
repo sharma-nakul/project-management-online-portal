@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import javax.annotation.Resource;
 
 /**
- * Created by Nakul on 28-Oct-15.
+ * @author Naks
  * This class is used to setup the web service configuration for entire application
  */
 

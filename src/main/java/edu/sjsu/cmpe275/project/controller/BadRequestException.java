@@ -1,7 +1,7 @@
 package edu.sjsu.cmpe275.project.controller;
 
 /**
- * @author Nakul Sharma
+ * @author Naks
  * Exception handling class to handle user defined HTTP request exceptions.
  */
 public class BadRequestException extends Throwable {

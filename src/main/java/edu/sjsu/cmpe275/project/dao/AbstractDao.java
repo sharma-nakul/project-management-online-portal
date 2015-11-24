@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * @author Nakul Sharma
+ * @author Naks
  * Abstract class that defines method to get the Hibernate Session.
  */
 public abstract class AbstractDao {

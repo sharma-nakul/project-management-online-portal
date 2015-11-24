@@ -28,7 +28,7 @@ public class Invitation implements Serializable {
     private Project project;
 
     /**
-     * Request Status of an invitaion
+     * Request Status of an invitation
      */
     @Column(name = "REQUESTSTATUS", nullable = false)
     private Boolean requestStatus;
