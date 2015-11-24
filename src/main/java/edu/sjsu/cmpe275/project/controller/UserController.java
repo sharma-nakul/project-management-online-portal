@@ -4,13 +4,14 @@ import edu.sjsu.cmpe275.project.model.User;
 import edu.sjsu.cmpe275.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Naks
@@ -56,12 +57,12 @@ public class UserController {
                 session.setAttribute("userDetails", user);
                 return "home";
             } else
-                    return "Could not save the user at this time, please check your request or try later.";
+                    return "error";
 
         } catch (DataIntegrityViolationException e) {
-            return "Either email or name is not correct.";
+            return "error";
         } catch (Exception e) {
-            return "Invalid Request";
+            return "error";
         }
     }
 
@@ -79,5 +80,33 @@ public class UserController {
           return "user";
       }
       return "error";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String showLogin(User user) {
+        return "login";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(@ModelAttribute(value = "user") User user, HttpServletRequest request) {
+        try {
+            session=request.getSession();
+            if (user.getEmail() != null && user.getPassword() != null) {
+                user = this.userService.verifyCredentials(user.getEmail(), user.getPassword());
+                if(user!=null) {
+                    session.setAttribute("userDetails", user);
+                    return "home";
+                }
+                else
+                    return "error";
+            } else
+                return "error";
+
+        } catch (DataIntegrityViolationException e) {
+            return "error";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
     }
 }

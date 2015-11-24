@@ -2,6 +2,7 @@ package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.dao.IUserDao;
 import edu.sjsu.cmpe275.project.model.User;
+import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,4 +57,20 @@ public class UserServiceImpl implements IUserService {
         return userDao.getUser(id);
     }
 
+    @Override
+    public  User verifyCredentials(String email, String password){
+        User user=this.userDao.getUserByEmailId(email);
+        if(user!=null) {
+            if (user.getPassword().equals(password))
+                return user;
+            else
+            {
+                user=null;
+                return user;
+            }
+
+        }
+        else
+            return user;
+    }
 }

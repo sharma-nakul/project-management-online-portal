@@ -1,8 +1,11 @@
 package edu.sjsu.cmpe275.project.dao;
 
 import edu.sjsu.cmpe275.project.model.User;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -68,11 +71,21 @@ public class UserDaoImpl extends AbstractDao implements IUserDao {
     @Override
     public User getUser(long id){
             session = getSession();
-            User user = (User) session.get(User.class,id);
+            User user = (User) session.get(User.class, id);
             if (user == null)
                 logger.info("Returns null while retrieving the person of id " + id);
             else
                 logger.info("Id " + id +" of a user exists in database.");
             return user;
+    }
+
+    @Override
+    public  User getUserByEmailId(String email){
+        session=getSession();
+        Query userByEmail = session.createQuery("from USER u where u.email=:email") ;
+        userByEmail.setParameter("email",email);
+        User user = null;
+        user=(User) userByEmail.uniqueResult();
+        return user;
     }
 }

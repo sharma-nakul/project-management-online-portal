@@ -12,5 +12,6 @@ public interface IUserService {
     boolean editUser (String name, String email,String password);
     boolean removeUser (long id);
     User getUser (long id);
+    User verifyCredentials(String email, String password);
 
 }

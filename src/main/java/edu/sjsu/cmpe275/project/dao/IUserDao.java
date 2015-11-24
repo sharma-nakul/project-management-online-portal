@@ -11,4 +11,5 @@ public interface IUserDao {
     boolean updateUser (User user);
     boolean deleteUser (User user);
     User getUser (long id);
+    User getUserByEmailId(String email);
 }
