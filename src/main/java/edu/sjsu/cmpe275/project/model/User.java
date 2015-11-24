@@ -2,6 +2,7 @@ package edu.sjsu.cmpe275.project.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "USER")
@@ -27,28 +28,61 @@ public class User implements Serializable {
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
+    /**
+     * Password of an user.
+     */
     @Column(name = "PASSWORD", nullable = false, unique = true)
     private String password;
 
+     /** Projects owned by this user. */
+    @OneToMany(mappedBy = "owner")
+    private List<User> projects;
+
+     /** Tasks assigned this user. */
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> tasks;
+
+    /** Invitation of this user. */
+    @OneToMany(mappedBy = "participant")
+    private List<Invitation> invitations;
+
+    public User(String name, String email, String password, List<User> projects, List<Task> tasks, List<Invitation> invitations) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.projects = projects;
+        this.tasks = tasks;
+        this.invitations = invitations;
+    }
 
     /**
-     * Initiliazed friend list
+     * Constructor
      */
     public User() {
     }
 
-    /**
-     * Set person's personal details
-     *
-     * @param name     Name of an user
-     * @param email    Email id of an user
-     * @param password Password of an user
-     */
-    public User(String name, String email, String password) {
+    public List<User> getProjects() {
+        return projects;
+    }
 
-        this.name = name;
-        this.email = email;
-        this.password = password;
+    public void setProjects(List<User> projects) {
+        this.projects = projects;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public List<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(List<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     public long getId() {
