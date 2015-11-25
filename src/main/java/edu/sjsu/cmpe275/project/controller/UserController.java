@@ -1,11 +1,10 @@
 package edu.sjsu.cmpe275.project.controller;
 
+import edu.sjsu.cmpe275.project.exception.BadRequestException;
 import edu.sjsu.cmpe275.project.model.User;
 import edu.sjsu.cmpe275.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

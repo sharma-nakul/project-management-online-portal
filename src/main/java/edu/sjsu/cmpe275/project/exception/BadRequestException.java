@@ -1,4 +1,4 @@
-package edu.sjsu.cmpe275.project.controller;
+package edu.sjsu.cmpe275.project.exception;
 
 /**
  * @author Naks
