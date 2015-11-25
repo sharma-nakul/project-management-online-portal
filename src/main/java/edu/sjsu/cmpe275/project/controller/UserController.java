@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @author Naks
- *
+ * Controller class to handle User APIs.
  */
 @Controller
 public class UserController {
@@ -88,8 +89,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute(value = "user") User user, HttpServletRequest request) {
+    public String login(@ModelAttribute(value = "user") User user, BindingResult results, HttpServletRequest request, Model model) {
         try {
+            if(results.hasErrors())
+                throw new Exception("Login Error");
             session=request.getSession();
             if (user.getEmail() != null && user.getPassword() != null) {
                 user = this.userService.verifyCredentials(user.getEmail(), user.getPassword());
@@ -98,14 +101,18 @@ public class UserController {
                     return "home";
                 }
                 else
-                    return "error";
+                    throw new BadRequestException("Password is incorrect!");
             } else
-                return "error";
+                throw new BadRequestException(request.getRequestURI(),"User does not exist.");
 
-        } catch (DataIntegrityViolationException e) {
-            return "error";
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (BadRequestException e) {
+            model.addAttribute("user", new User());
+            model.addAttribute("loginError", true);
+            model.addAttribute("badException",e);
+            return "login";
+        }
+        catch (Exception e){
+            model.addAttribute("exception",e);
             return "error";
         }
     }

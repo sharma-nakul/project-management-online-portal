@@ -4,7 +4,7 @@ package edu.sjsu.cmpe275.project.controller;
  * @author Naks
  * Exception handling class to handle user defined HTTP request exceptions.
  */
-public class BadRequestException extends Throwable {
+public class BadRequestException extends Exception {
 
     /**
      * URL of request made.
@@ -21,6 +21,8 @@ public class BadRequestException extends Throwable {
      */
     private int statusCode;
 
+    private String propertyName;
+
     /**
      * Constructor to assign url and message to thrown exception.
      * @param url URL of HttpServletRequest
@@ -36,8 +38,9 @@ public class BadRequestException extends Throwable {
      * @param message User defined value for the exception.
      * @param statusCode It will have integer type HTTP error code like 404, 400, etc.
      */
-    public BadRequestException(String message, int statusCode)
+    public BadRequestException(String message, int statusCode, String propertyName)
     {
+        this.propertyName=propertyName;
         this.message=message;
         this.statusCode=statusCode;
     }
@@ -96,5 +99,13 @@ public class BadRequestException extends Throwable {
      */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 }
