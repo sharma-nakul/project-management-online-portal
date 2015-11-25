@@ -1,29 +1,82 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head lang="en">
-
     <title>Project Manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../static/css/example.css" th:href="@{css/example.css}" rel="stylesheet" media="screen"/>
+    <script src="../static/js/gl_function.js" th:src="@{js/gl_function.js}"></script>
+    <script src="../static/js/jquery-1.8.2.min.js" th:src="@{js/jquery-1.8.2.min.js}"></script>
+    <script src="../static/js/jquery.slide.js" th:src="@{js/jquery.slide.js}"></script>
 </head>
-            <form action="#" th:action="@{/signup}" th:object="${user}" method="post">
-                <h3 align="left">SIGN UP</h3>
 
-                <table>
-                    <tr>
-                        <td>Name</td>
-                        <td><input type="text" th:field="*{name}" /></td>
-                    </tr>
-                    <tr>
-                        <td>Email</td>
-                        <td><input type="text" th:field="*{email}" /></td>
-                    </tr>
-                    <tr>
-                        <td>Password</td>
-                        <td><input type="password" th:field="*{password}" /></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="submit" /></td>
-                    </tr>
-                </table>
-             </form>
+<body>
+    <center>
+            <div id="example_1">
+                <div id="example_9"><img id='img_9' src='../static/images/example/example_9.png' th:src="@{images/example/example_9.png}" width='370' height='138' border='0'/></div>
+                <div id="example_10"><a href='example.html' target='_self' title=''><img id='img_10' src='../static/images/example/example_10.png' th:src="@{images/example/example_10.png}" width='139' height='140' border='0'/></a></div>
+                <div id="example_11"><a href='example.html' target='_self' title=''><img id='img_11' src='../static/images/example/example_11.png' th:src="@{images/example/example_11.png}" width='138' height='140' border='0'/></a></div>
+                <div id="example_13"><a href='example.html' target='_self' title=''><img id='img_13' src='../static/images/example/example_13.png' th:src="@{images/example/example_13.png}" width='142' height='140' border='0'/></a></div>
+                <div id="example_12"><a href='example.html' target='_self' title=''><img id='img_12' src='../static/images/example/example_12.png' th:src="@{images/example/example_12.png}" width='137' height='140' border='0'/></a></div>
+                <div id="example_14"><a href='example.html' target='_self' title=''><img id='img_14' src='../static/images/example/example_14.png' th:src="@{images/example/example_14.png}" width='142' height='140' border='0'/></a></div>
+            </div>
+            <div id="example_2">
+                <div id="example_15">
+                    <div class="w_ctr_15">
+                        <div class="JQ-slide">
+                            <ul class="JQ-slide-content">
+                                <li><img src="../static/images/example/banner-image-1.png" th:src="@{images/example/banner-image-1.png}" width="800" height="418" alt=""/><span></span></li>
+                                <li><img src="../static/images/example/banner-image-2.png" th:src="@{images/example/banner-image-2.png}" width="800" height="418" alt=""/><span></span></li>
+                                <li><img src="../static/images/example/banner-image-3.png" th:src="@{images/example/banner-image-3.png}" width="800" height="418" alt=""/><span></span></li>
+                            </ul>
+                            <ul class="JQ-slide-nav">
+                                <li class="on">1</li>
+                                <li>2</li>
+                                <li>3</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(function (){
+
+                            $(".w_ctr_15 .JQ-slide").Slide({
+                                effect:"scroolX",
+                                speed:"normal",
+                                timer:5000
+                            });
+
+                        });
+                    </script>
+                </div>
+                <div id="example_16">
+                    <div id="example_23">Project Manager</div>
+                    <div id="example_19">SIGN UP</div>
+                    <form action="#" th:action="@{/signup}" th:object="${user}" method="post">
+                        <div id="example_20">
+                            <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;" >
+                                <tr>
+                                    <td style="font-size: 18px">Name</td>
+                                    <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{name}" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 18px">Email</td>
+                                    <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{email}" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 18px">Password</td>
+                                    <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="password" th:field="*{password}" /></td>
+                                </tr>
+                            </table>
+
+                        <br /></div>
+                        <div id="example_21"><input type="submit" style="background-color:#1e8bc3; width: 137px; height: 45px; border: 0px; color: white; font-size: 18px; cursor: pointer " value="Sign up"  /></div>
+                    </form>
+                </div>
+            </div>
+            <div id="example_7">  </div>
+            <div id="example_8">
+                <div id="example_128">
+                    <div id="example_129">Copyright © San Jose State University. All Rights Reserved.</div>
+                </div>
+            </div>
+        </center>
+</body>
 </html>

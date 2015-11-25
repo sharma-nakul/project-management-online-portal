@@ -26,27 +26,6 @@ public class UserController {
 
     private HttpSession session = null;
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity addPerson(
-            @RequestParam(value = "name", required = true) String name,
-            @RequestParam(value = "email", required = true) String email,
-            @RequestParam(value = "password", required = true) String password) {
-        try {
-            User user;
-            if (name != null && email != null) {
-                user = this.userService.createUser(name, email, password);
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            } else
-                return new ResponseEntity<>("Could not save the user at this time, please check your request or try later.", HttpStatus.BAD_REQUEST);
-
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Either email or name is not correct.", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Invalid Request", HttpStatus.BAD_REQUEST);
-        }
-    }
-
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signUp(
@@ -72,7 +51,7 @@ public class UserController {
         return "signup";
     }
 
-    @RequestMapping(value="/user", method = RequestMethod.GET)
+    /*@RequestMapping(value="/user", method = RequestMethod.GET)
     public String getPerson(Model model, HttpServletRequest request) {
       session = request.getSession();
       User user = (User) session.getAttribute("userDetails");
@@ -81,7 +60,7 @@ public class UserController {
           return "user";
       }
       return "error";
-    }
+    }*/
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showLogin(User user) {
