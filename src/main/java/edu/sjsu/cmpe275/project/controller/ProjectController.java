@@ -1,6 +1,7 @@
 package edu.sjsu.cmpe275.project.controller;
 
 import edu.sjsu.cmpe275.project.exception.BadRequestException;
+import edu.sjsu.cmpe275.project.model.Pages;
 import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.model.User;
 import edu.sjsu.cmpe275.project.service.IProjectService;
@@ -23,46 +24,38 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class ProjectController {
 
+    private static final String userSession = "userDetails";
     @Autowired
     IProjectService projectService;
-
     private HttpSession session;
-
-    private static final String projectPage = "project";
-    private static final String errorPage = "error";
-    private static final String loginPage = "login";
-    private static final String homePage = "home";
-    private static final String userSession = "userDetails";
 
     @RequestMapping(value = "/project", method = RequestMethod.POST)
     public String createProject(
             @ModelAttribute(value = "project") Project project, HttpServletRequest request, Model model) {
         try {
-            session = request.getSession();
             model.addAttribute("projectCreateError", false);
-                if (!project.getTitle().isEmpty() && !project.getDescription().isEmpty()) {
-                    project.setState(Project.ProjectState.PLANNING);
-                    project.setOwner((User) session.getAttribute(userSession));
-                    long projectId = this.projectService.createProject(project);
-                    session.setAttribute("projectId", projectId);
-                    return homePage;
-                } else {
-                    if (project.getTitle().isEmpty())
-                        throw new BadRequestException("Title is not provided.", HttpStatus.BAD_REQUEST.value(), "title");
-                    else if (project.getDescription().isEmpty())
-                        throw new BadRequestException("Description is not provided.", HttpStatus.BAD_REQUEST.value(), "description");
-                    else
-                        throw new BadRequestException("Please provide mandatory fields.", HttpStatus.BAD_REQUEST.value(), "mandatory");
-                }
+            if (!project.getTitle().isEmpty() && !project.getDescription().isEmpty()) {
+                project.setState(Project.ProjectState.PLANNING);
+                project.setOwner((User) session.getAttribute(userSession));
+                long projectId = this.projectService.createProject(project);
+                session = request.getSession();
+                session.setAttribute("projectId", projectId);
+                return Pages.home.toString();
+            } else {
+                if (project.getTitle().isEmpty() && project.getDescription().isEmpty())
+                    throw new BadRequestException("Please provide Title and Description.", HttpStatus.BAD_REQUEST.value(), "mandatory");
+                else if (project.getTitle().isEmpty())
+                    throw new BadRequestException("Title is not provided.", HttpStatus.BAD_REQUEST.value(), "title");
+                else
+                    throw new BadRequestException("Description is not provided.", HttpStatus.BAD_REQUEST.value(), "description");
+            }
         } catch (BadRequestException e) {
-            System.out.println(e.getMessage());
-            model.addAttribute("project", new Project());
             model.addAttribute("projectCreateError", true);
             model.addAttribute("badException", e);
-            return projectPage;
+            return Pages.project.toString();
         } catch (Exception e) {
             model.addAttribute("exception", e);
-            return errorPage;
+            return Pages.error.toString();
         }
     }
 
@@ -72,15 +65,16 @@ public class ProjectController {
             session = request.getSession();
             User user = (User) session.getAttribute(userSession);
             if (user != null)
-                return projectPage;
+                return Pages.project.toString();
             else
                 throw new IllegalStateException();
         } catch (IllegalStateException e) {
             System.out.println("IllegalStateException: User should be logged in to create a project");
-            return "redirect:/" + loginPage;
+            return "redirect:/" + Pages.login.toString();
         } catch (NullPointerException e) {
             System.out.println("NullPointerException: User should be logged in to create a project");
-            return "redirect:/" + loginPage;
+            return "redirect:/" + Pages.login.toString();
         }
     }
+
 }
