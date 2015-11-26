@@ -23,7 +23,7 @@ public class Invitation implements Serializable {
 
 
     /** Project. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECTID")
     private Project project;
 

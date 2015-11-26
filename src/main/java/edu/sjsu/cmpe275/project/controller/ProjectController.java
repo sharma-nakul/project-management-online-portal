@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @author Naks
- *         Controller class to handle Project APIs.
+ * Controller class to handle Project APIs.
  */
 
 @Controller
