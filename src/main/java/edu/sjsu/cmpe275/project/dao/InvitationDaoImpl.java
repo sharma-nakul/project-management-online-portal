@@ -1,7 +1,11 @@
 package edu.sjsu.cmpe275.project.dao;
 
 import edu.sjsu.cmpe275.project.model.Invitation;
+import java.util.List;
+
+import java.util.ArrayList;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +52,39 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
         else
             logger.info("Id " + id +" of an invitation exists in database.");
         return invitation;
+    }
+
+    @Override
+    public long saveInvitation (Invitation invitation) {
+        session = getSession();
+        session.save(invitation);
+        session.flush();
+        logger.info("Invitation added successfully");
+        return invitation.getId();
+    }
+
+    @Override
+    public List<Invitation> getInvitations (long id) {
+        session = getSession();
+        Query getInvitations = session.createQuery("from INVITATION i where i.participant.id=:id and i.requestStatus = false") ;
+        getInvitations.setParameter("id", id);
+        List<Invitation> invitations = null;
+        invitations = (ArrayList<Invitation>) getInvitations.list();
+        return invitations;
+    }
+
+    @Override
+    public boolean removeInvitation (Invitation invitation){
+        try {
+            session = getSession();
+            session.delete(invitation);
+            session.flush();
+            logger.info("Inivitation deleted successfully");
+            return true;
+        } catch (HibernateException e) {
+            logger.info("Hibernate Exception: " + e.getMessage());
+            return false;
+        }
     }
 
 }
