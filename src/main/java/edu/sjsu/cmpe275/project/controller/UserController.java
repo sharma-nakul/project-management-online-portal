@@ -25,6 +25,12 @@ public class UserController {
 
     private HttpSession session = null;
 
+    private static final String signupPage = "signup";
+    private static final String errorPage = "error";
+    private static final String loginPage = "login";
+    private static final String homePage = "home";
+    private static final String userSession = "userDetails";
+
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signUp(
@@ -33,21 +39,21 @@ public class UserController {
             if (user.getName() != null && user.getEmail() != null && user.getPassword() != null) {
                 user = this.userService.createUser(user.getName(), user.getEmail(), user.getPassword());
                 session = request.getSession();
-                session.setAttribute("userDetails", user);
-                return "home";
+                session.setAttribute(userSession, user);
+                return homePage;
             } else
-                    return "error";
+                    return errorPage;
 
         } catch (DataIntegrityViolationException e) {
-            return "error";
+            return errorPage;
         } catch (Exception e) {
-            return "error";
+            return errorPage;
         }
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String showSignUp(User user) {
-        return "signup";
+        return signupPage;
     }
 
     /*@RequestMapping(value="/user", method = RequestMethod.GET)
@@ -71,12 +77,12 @@ public class UserController {
         try {
             if(results.hasErrors())
                 throw new Exception("Login Error");
-            session=request.getSession();
             if (user.getEmail() != null && user.getPassword() != null) {
+                session=request.getSession();
                 user = this.userService.verifyCredentials(user.getEmail(), user.getPassword());
                 if(user!=null) {
-                    session.setAttribute("userDetails", user);
-                    return "home";
+                    session.setAttribute(userSession, user);
+                    return homePage;
                 }
                 else
                     throw new BadRequestException("Password is incorrect!");
@@ -87,11 +93,11 @@ public class UserController {
             model.addAttribute("user", new User());
             model.addAttribute("loginError", true);
             model.addAttribute("badException",e);
-            return "login";
+            return loginPage;
         }
         catch (Exception e){
             model.addAttribute("exception",e);
-            return "error";
+            return errorPage;
         }
     }
 }

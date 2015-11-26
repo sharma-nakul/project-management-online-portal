@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+
+    <title>Project Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<form action="#" th:action="@{/project}" th:object="${project}" method="post">
+    <h3 align="left">Project Creation</h3>
+
+    <table>
+        <tr>
+            <td>Title</td>
+            <td><input type="text" th:field="*{title}" /></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><input type="text" th:field="*{description}" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" /></td>
+        </tr>
+    </table>
+</form>
+<div th:if="${projectCreateError}"><span style="color: #ff0000" th:text="${badException.message}"></span></div>
+</html>

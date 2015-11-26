@@ -1,14 +1,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
 
-    <title>CMPE 275 Lab 2</title>
+    <title>Project Manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<h1>This is a root for CMPE 275 Lab 2</h1>
+<h1>Project Manager</h1>
 
-<h2>Spring View Test!</h2>
+<h2>Home Page</h2>
+<div th:if="${projectCreateError==false}"><span style="color: #fe9f00" th:text="${project.title}"></span></div>
 
-<footer>@Copyright Nakul Sharma (SJSU Id: 010090730)</footer>
 </body>
 </html>
