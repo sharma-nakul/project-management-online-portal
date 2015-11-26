@@ -36,6 +36,7 @@ public class Project implements Serializable {
     /**
      * State of a project
      */
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATE", nullable = false)
     private ProjectState state;
 
