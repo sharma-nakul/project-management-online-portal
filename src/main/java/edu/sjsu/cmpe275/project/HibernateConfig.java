@@ -76,7 +76,7 @@ public class HibernateConfig {
      * @param sessionFactory Object of session factory to initiate session
      * @return current transactions
      */
-    @Bean (name ="tx1")
+    @Bean (name ="transManager")
     public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
         HibernateTransactionManager tx = new HibernateTransactionManager();
         tx.setSessionFactory(sessionFactory);
