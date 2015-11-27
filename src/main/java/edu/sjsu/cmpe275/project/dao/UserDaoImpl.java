@@ -34,7 +34,8 @@ public class UserDaoImpl extends AbstractDao implements IUserDao {
         session.save(user);
         session.flush();
         logger.info(user.getName() + " added successfully");
-        return user;
+        User refreshUser=(User)session.get(User.class,user.getId());
+        return refreshUser;
     }
 
     @Override

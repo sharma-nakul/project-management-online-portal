@@ -9,6 +9,15 @@
 
 <h2>Home Page</h2>
 <div th:if="${projectCreateError==false}"><span style="color: #fe9f00" th:text="${project.title}"></span></div>
-
+<table>
+    <tr>
+        <td>Title</td>
+        <td>Description</td>
+    </tr>
+<tr th:each="project : ${userProjects}">
+    <td th:text="${project.title}"></td>
+        <td th:text="${project.description}"></td>
+</tr>
+</table>
 </body>
 </html>

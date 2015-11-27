@@ -1,7 +1,6 @@
 package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.dao.IProjectDao;
-import edu.sjsu.cmpe275.project.dao.IUserDao;
 import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.model.User;
 import org.slf4j.Logger;
@@ -9,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Naks
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
  *         counted as a single transaction
  */
 @Service
-@Transactional("tx1")
 public class ProjectServiceImpl implements IProjectService {
 
     /**
@@ -32,26 +32,36 @@ public class ProjectServiceImpl implements IProjectService {
     @Autowired
     private IProjectDao projectDao;
 
+    @Transactional(value = "transManager")
     @Override
     public long createProject(Project project) {
         return projectDao.addProject(project);
     }
 
+    @Transactional(value = "transManager")
     @Override
     public boolean editProject(String title, String description, Project.ProjectState state, User owner) {
         Project project = new Project(title, description, owner, state);
         return projectDao.updateProject(project);
     }
 
+    @Transactional(value = "transManager")
     @Override
     public boolean removeProject(long id) {
         Project project = projectDao.getProject(id);
         return projectDao.deleteProject(project);
     }
 
+    @Transactional(value = "transManager")
     @Override
     public Project getProject(long id) {
         return projectDao.getProject(id);
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public List<Project> getProjectsById(long id) {
+        return projectDao.getProjectsByOwnerId(id);
     }
 }
 

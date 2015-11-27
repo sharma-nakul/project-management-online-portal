@@ -2,7 +2,6 @@ package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.dao.IUserDao;
 import edu.sjsu.cmpe275.project.model.User;
-import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Naks
- * Handler class for User. The class intercept REST call to persist or retrieve data.
- * Service annotation to mark the class as service class in application context
- * Transactional annotation to make the class transactional entity i.e. it will be
- * counted a single transaction
+ *         Handler class for User. The class intercept REST call to persist or retrieve data.
+ *         Service annotation to mark the class as service class in application context
+ *         Transactional annotation to make the class transactional entity i.e. it will be
+ *         counted a single transaction
  */
 @Service
-@Transactional("tx1")
 public class UserServiceImpl implements IUserService {
 
     /**
@@ -26,51 +24,49 @@ public class UserServiceImpl implements IUserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     /**
-     * Autowire the Person DAO interface object in this class
+     * Autowire the User DAO interface object in this class
      */
     @Autowired
     private IUserDao userDao;
 
+    @Transactional(value = "transManager")
     @Override
-    public User createUser(String name, String email,String password){
-        User user = new User(name,email,password);
+    public User createUser(String name, String email, String password) {
+        User user = new User(name, email, password);
         return userDao.addUser(user);
     }
 
+    @Transactional(value = "transManager")
     @Override
-    public boolean editUser (String name, String email, String password)
-    {
-        User user = new User(name,email,password);
+    public boolean editUser(String name, String email, String password) {
+        User user = new User(name, email, password);
         return userDao.updateUser(user);
     }
 
+    @Transactional(value = "transManager")
     @Override
-    public boolean removeUser(long id)
-    {
+    public boolean removeUser(long id) {
         User user = userDao.getUser(id);
         return userDao.deleteUser(user);
     }
 
+    @Transactional(value = "transManager")
     @Override
-    public User getUser(long id)
-    {
+    public User getUser(long id) {
         return userDao.getUser(id);
     }
 
+    @Transactional(value = "transManager")
     @Override
-    public  User verifyCredentials(String email, String password){
-        User user=this.userDao.getUserByEmailId(email);
-        if(user!=null) {
+    public User verifyCredentials(String email, String password) {
+        try {
+            User user = this.userDao.getUserByEmailId(email);
             if (user.getPassword().equals(password))
                 return user;
             else
-            {
-                user=null;
-                return user;
-            }
-
+                throw new NullPointerException("Incorrect Password!");
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Invalid Credentials!");
         }
-        else
-            return user;
     }
 }

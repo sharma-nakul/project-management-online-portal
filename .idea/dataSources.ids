@@ -7,14 +7,14 @@
     </database-info>
     <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
     <schema name="" catalog="projectmanager"/>
-    <table name="participant" schema="" catalog="projectmanager" type="TABLE">
+    <table name="invitation" schema="" catalog="projectmanager" type="TABLE">
       <column name="ID" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
       <column name="REQUESTSTATUS" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
       <column name="PROJECTID" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="PARTICIPANTID" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="ID"/>
-      <foreign-key name="participant_ibfk_1" columns="PARTICIPANTID" ref-table="user" ref-schema="" ref-catalog="projectmanager" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
-      <foreign-key name="participant_ibfk_2" columns="PROJECTID" ref-table="project" ref-schema="" ref-catalog="projectmanager" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="PARTICIPANTID" unique="false" columns="PARTICIPANTID"/>
+      <index name="PROJECTID" unique="false" columns="PROJECTID"/>
     </table>
     <table name="project" schema="" catalog="projectmanager" type="TABLE">
       <column name="ID" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -23,7 +23,6 @@
       <column name="OWNERID" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="ID"/>
       <foreign-key name="project_ibfk_1" columns="OWNERID" ref-table="user" ref-schema="" ref-catalog="projectmanager" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
-      <exported-key name="participant_ibfk_2" table="participant" schema="" catalog="projectmanager" columns="PROJECTID"/>
       <exported-key name="task_ibfk_2" table="task" schema="" catalog="projectmanager" columns="PROJECTID"/>
     </table>
     <table name="task" schema="" catalog="projectmanager" type="TABLE">
@@ -45,7 +44,6 @@
       <column name="EMAIL" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
       <column name="PASSWORD" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="ID"/>
-      <exported-key name="participant_ibfk_1" table="participant" schema="" catalog="projectmanager" columns="PARTICIPANTID"/>
       <exported-key name="project_ibfk_1" table="project" schema="" catalog="projectmanager" columns="OWNERID"/>
       <exported-key name="task_ibfk_1" table="task" schema="" catalog="projectmanager" columns="ASSIGNEEID"/>
     </table>

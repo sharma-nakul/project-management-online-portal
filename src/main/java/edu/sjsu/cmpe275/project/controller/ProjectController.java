@@ -5,24 +5,33 @@ import edu.sjsu.cmpe275.project.model.Pages;
 import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.model.User;
 import edu.sjsu.cmpe275.project.service.IProjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Naks
- * Controller class to handle Project APIs.
+ *         Controller class to handle Project APIs.
  */
 
 @Controller
 public class ProjectController {
+
+    /**
+     * Variable of type logger to print data on console
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
     private static final String userSession = "userDetails";
     @Autowired
@@ -33,13 +42,16 @@ public class ProjectController {
     public String createProject(
             @ModelAttribute(value = "project") Project project, HttpServletRequest request, Model model) {
         try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
             model.addAttribute("projectCreateError", false);
             if (!project.getTitle().isEmpty() && !project.getDescription().isEmpty()) {
                 project.setState(Project.ProjectState.PLANNING);
                 project.setOwner((User) session.getAttribute(userSession));
                 long projectId = this.projectService.createProject(project);
-                session = request.getSession();
                 session.setAttribute("projectId", projectId);
+                logger.info(request.getRequestURL()+": "+"Project created successfully having project id "+projectId);
                 return Pages.home.toString();
             } else {
                 if (project.getTitle().isEmpty() && project.getDescription().isEmpty())
@@ -50,10 +62,15 @@ public class ProjectController {
                     throw new BadRequestException("Description is not provided.", HttpStatus.BAD_REQUEST.value(), "description");
             }
         } catch (BadRequestException e) {
+            logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("projectCreateError", true);
             model.addAttribute("badException", e);
             return Pages.project.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
         } catch (Exception e) {
+            logger.error("Exception:" + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("exception", e);
             return Pages.error.toString();
         }
@@ -61,20 +78,50 @@ public class ProjectController {
 
     @RequestMapping(value = "/project", method = RequestMethod.GET)
     public String showCreateProject(Project project, HttpServletRequest request) {
+        String message = "User should be logged in to create a project";
         try {
             session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
             User user = (User) session.getAttribute(userSession);
-            if (user != null)
-                return Pages.project.toString();
+            if (user != null){
+                logger.info("Redirecting to "+request.getRequestURL());
+                return Pages.project.toString();}
             else
-                throw new IllegalStateException();
+                throw new IllegalStateException(message);
         } catch (IllegalStateException e) {
-            System.out.println("IllegalStateException: User should be logged in to create a project");
+            logger.error("IllegalStateException: "+request.getRequestURL()+": "+e.getMessage());
             return "redirect:/" + Pages.login.toString();
         } catch (NullPointerException e) {
-            System.out.println("NullPointerException: User should be logged in to create a project");
+            logger.error("NullPointerException: "+request.getRequestURL()+": "+message);
             return "redirect:/" + Pages.login.toString();
         }
     }
 
+    @RequestMapping(value = "/{owner_id}/projects", method = RequestMethod.GET)
+    public String getAllProjects(@PathVariable("owner_id") String ownerId, HttpServletRequest request, Model model) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                if (Long.valueOf(ownerId) != (user.getId()))
+                    throw new NullPointerException("Owner doesn't have privileges for this request");
+                else {
+                    List<Project> projects = projectService.getProjectsById(user.getId());
+                    model.addAttribute("userProjects", projects);
+                    logger.info(request.getRequestURL()+": Project list returned for "+user.getName());
+                    return Pages.home.toString();
+                }
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
 }

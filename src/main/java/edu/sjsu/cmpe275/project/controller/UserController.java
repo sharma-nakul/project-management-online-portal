@@ -4,6 +4,8 @@ import edu.sjsu.cmpe275.project.exception.BadRequestException;
 import edu.sjsu.cmpe275.project.model.Pages;
 import edu.sjsu.cmpe275.project.model.User;
 import edu.sjsu.cmpe275.project.service.IUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,22 +25,31 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     private static final String userSession = "userDetails";
+
+    /**
+     * Variable of type logger to print data on console
+     */
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     IUserService userService;
     private HttpSession session = null;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String showLogin(User user) {
+    public String showLogin(User user, HttpServletRequest request) {
+        session = request.getSession();
+        logger.info("Redirecting to "+request.getRequestURL());
         return "login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@ModelAttribute(value = "user") User user, HttpServletRequest request, Model model) {
         try {
+            session = request.getSession();
             if (!user.getEmail().isEmpty() && !user.getPassword().isEmpty()) {
-                session = request.getSession();
                 user = this.userService.verifyCredentials(user.getEmail(), user.getPassword());
                 session.setAttribute(userSession, user);
+                logger.info(request.getRequestURL()+": "+"Login successful for "+user.getName());
                 return Pages.home.toString();
             } else {
                 if (user.getEmail().isEmpty())
@@ -47,11 +58,13 @@ public class UserController {
                     throw new NullPointerException("Password is empty");
             }
         } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("user", new User());
             model.addAttribute("loginError", true);
             model.addAttribute("credentials", e);
             return Pages.login.toString();
         } catch (Exception e) {
+            logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("exception", e);
             return Pages.error.toString();
         }
@@ -59,6 +72,7 @@ public class UserController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String showSignUp(User user) {
+        logger.info("Redirecting to signup url");
         return Pages.signup.toString();
     }
 
@@ -70,14 +84,17 @@ public class UserController {
                 user = this.userService.createUser(user.getName(), user.getEmail(), user.getPassword());
                 session = request.getSession();
                 session.setAttribute(userSession, user);
+                logger.info(request.getRequestURL()+": "+"Signup successful for "+user.getName());
                 return Pages.home.toString();
             } else
                 throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
         } catch (BadRequestException e) {
+            logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("signupError", true);
             model.addAttribute("badException", e);
             return Pages.signup.toString();
         } catch (Exception e) {
+            logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("exception", e);
             return Pages.error.toString();
         }

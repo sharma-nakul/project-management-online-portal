@@ -1,12 +1,17 @@
 package edu.sjsu.cmpe275.project.dao;
 
+import edu.sjsu.cmpe275.project.model.Invitation;
 import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.model.User;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Naks
@@ -74,5 +79,18 @@ public class ProjectDaoImpl extends AbstractDao implements IProjectDao{
         else
             logger.info("Id " + id +" of a project exists in database.");
         return project;
+    }
+
+    @Override
+    public List<Project> getProjectsByOwnerId(long ownerId){
+        session = getSession();
+        Query getProjects = session.createQuery("from PROJECT p where p.owner.id=:id") ;
+        getProjects.setParameter("id", ownerId);
+        List<Project> projects = (ArrayList<Project>)getProjects.list();
+        if(projects!=null)
+            logger.info("There is atleast one project owned by owner id: "+ownerId);
+        else
+            logger.info("No project is owned by owner id: "+ownerId);
+        return projects;
     }
 }

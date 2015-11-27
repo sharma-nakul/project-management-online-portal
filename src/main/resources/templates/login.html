@@ -50,7 +50,7 @@
             <div id="example_19">LOGIN</div>
             <form action="#" th:action="@{/login}" th:object="${user}" method="post">
                 <div id="example_20" style="margin-top:15px;" >
-                    <div th:if="${loginError}"><span style="color: #ff0000"  th:text="${badException.message}"></span></div>
+                    <div th:if="${loginError}"><span style="color: #ff0000"  th:text="${credentials.message}"></span></div>
                     <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;" >
                         <tr>
                             <td style="font-size: 18px">Email</td>
