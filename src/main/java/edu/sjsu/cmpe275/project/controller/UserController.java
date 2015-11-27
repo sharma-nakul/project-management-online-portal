@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,25 +33,23 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute(value = "user") User user, BindingResult results, HttpServletRequest request, Model model) {
+    public String login(@ModelAttribute(value = "user") User user, HttpServletRequest request, Model model) {
         try {
-            if (results.hasErrors())
-                throw new Exception("Login Error");
-            if (user.getEmail() != null && user.getPassword() != null) {
+            if (!user.getEmail().isEmpty() && !user.getPassword().isEmpty()) {
                 session = request.getSession();
                 user = this.userService.verifyCredentials(user.getEmail(), user.getPassword());
-                if (user != null) {
-                    session.setAttribute(userSession, user);
-                    return Pages.home.toString();
-                } else
-                    throw new BadRequestException("Password is incorrect!");
-            } else
-                throw new BadRequestException(request.getRequestURI(), "User does not exist.");
-
-        } catch (BadRequestException e) {
+                session.setAttribute(userSession, user);
+                return Pages.home.toString();
+            } else {
+                if (user.getEmail().isEmpty())
+                    throw new NullPointerException("Email id is empty");
+                else
+                    throw new NullPointerException("Password is empty");
+            }
+        } catch (NullPointerException e) {
             model.addAttribute("user", new User());
             model.addAttribute("loginError", true);
-            model.addAttribute("badException", e);
+            model.addAttribute("credentials", e);
             return Pages.login.toString();
         } catch (Exception e) {
             model.addAttribute("exception", e);
@@ -96,6 +93,5 @@ public class UserController {
       }
       return "error";
     }*/
-
 
 }
