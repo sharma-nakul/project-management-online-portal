@@ -3,7 +3,7 @@ package edu.sjsu.cmpe275.project.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity (name = "INVITATION")
+@Entity(name = "INVITATION")
 @Table(name = "INVITATION")
 public class Invitation implements Serializable {
 
@@ -16,14 +16,18 @@ public class Invitation implements Serializable {
     private long id;
 
 
-    /** Participant of the project. */
+    /**
+     * Participant of the project.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARTICIPANTID")
     private User participant;
 
 
-    /** Project. */
-    @ManyToOne(fetch = FetchType.EAGER)
+    /**
+     * Project.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJECTID")
     private Project project;
 
