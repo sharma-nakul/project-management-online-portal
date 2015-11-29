@@ -58,13 +58,6 @@ public class UserServiceImpl implements IUserService {
 
     @Transactional(value = "transManager")
     @Override
-    public boolean removeUser(long id) {
-        User user = userDao.getUser(id);
-        return userDao.deleteUser(user);
-    }
-
-    @Transactional(value = "transManager")
-    @Override
     public User getUser(long id) {
         return userDao.getUser(id);
     }

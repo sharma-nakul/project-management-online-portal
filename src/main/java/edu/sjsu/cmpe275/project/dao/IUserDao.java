@@ -14,7 +14,6 @@ import java.util.List;
 public interface IUserDao {
     User addUser(User user);
     boolean updateUser (User user);
-    boolean deleteUser (User user);
     User getUser (long id);
     User getUserByEmailId(String email);
     List<Project> getProjectsByOwnerId(long ownerId);

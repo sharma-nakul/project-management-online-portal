@@ -60,21 +60,6 @@ public class UserDaoImpl extends AbstractDao implements IUserDao {
     }
 
     @Override
-    public boolean deleteUser(User user){
-        try {
-            session = getSession();
-            session.delete(user);
-            session.flush();
-            logger.info(user.getName() + " deleted successfully");
-            return true;
-        }
-        catch (HibernateException e)
-        {
-            logger.info("Hibernate Exception: " +e.getMessage());
-            return false;
-        }
-    }
-    @Override
     public User getUser(long id){
             session = getSession();
             User user = (User) session.get(User.class, id);
