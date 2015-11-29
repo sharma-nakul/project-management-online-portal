@@ -1,23 +1,87 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-
     <title>Project Manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../static/css/example.css" th:href="@{css/example.css}" rel="stylesheet" media="screen"/>
+    <script src="../static/js/gl_function.js" th:src="@{js/gl_function.js}"></script>
+    <script src="../static/js/jquery-1.8.2.min.js" th:src="@{js/jquery-1.8.2.min.js}"></script>
+    <script src="../static/js/jquery.slide.js" th:src="@{js/jquery.slide.js}"></script>
 </head>
 <body>
-<h1>Project Manager</h1>
 
-<h2>Home Page</h2>
-<div th:if="${projectCreateError==false}"><span style="color: #fe9f00" th:text="${project.title}"></span></div>
-<table>
-    <tr>
-        <td>Title</td>
-        <td>Description</td>
-    </tr>
-<tr th:each="project : ${userProjects}">
-    <td th:text="${project.title}"></td>
-        <td th:text="${project.description}"></td>
-</tr>
-</table>
+<center>
+    <div id="example_1">
+        <div id="example_9"><img id='img_9' src='../static/images/example/example_9.png' th:src="@{images/example/example_9.png}" width='370' height='138' border='0'/></div>
+        <div id="example_10"><a href='example.html' target='_self' title=''><img id='img_10' src='../static/images/example/example_10.png' th:src="@{images/example/example_10.png}" width='139' height='140' border='0'/></a></div>
+        <div id="example_11"><a href='example.html' target='_self' title=''><img id='img_11' src='../static/images/example/example_11.png' th:src="@{images/example/example_11.png}" width='138' height='140' border='0'/></a></div>
+        <div id="example_13"><a href='example.html' target='_self' title=''><img id='img_13' src='../static/images/example/example_13.png' th:src="@{images/example/example_13.png}" width='142' height='140' border='0'/></a></div>
+        <div id="example_12"><a href='example.html' target='_self' title=''><img id='img_12' src='../static/images/example/example_12.png' th:src="@{images/example/example_12.png}" width='137' height='140' border='0'/></a></div>
+        <div id="example_14"><a href='example.html' target='_self' title=''><img id='img_14' src='../static/images/example/example_14.png' th:src="@{images/example/example_14.png}" width='142' height='140' border='0'/></a></div>
+    </div>
+    <div id="example_5">
+        <div id="example_73">
+        </div>
+        <div id="example_74">
+            <div id="example_75">Project Manager</div>
+            <div id="example_76">
+                <div id="example_77">
+                    <div id="example_79">
+                    </div>
+                    <div id="example_83">Gererate reports of the tasks of projects to view the current status of each project.</div>
+                    <div id="example_80">
+                    </div>
+                    <div id="example_84">Create projects and send invitations to the users to participate in the projects.<br /></div>
+                </div>
+                <div id="example_78">
+                    <div id="example_81">
+                    </div>
+                    <div id="example_85">Create and manage tasks for each project. Assign tasks to participants and track their progress.</div>
+                    <div id="example_82">
+                    </div>
+                    <div id="example_86">View your complete details including you projects, tasks, invitations etc.<br/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="example_4">
+        <div id="example_39">Home</div>
+        <div id="example_71">
+            <div id="example_40">
+                <div id="example_54">My Account</div>
+                <div id="example_62">This section enables to view/edit your details. You can see the projects that you own and the projects that you participate in. You can also view the tasks that have been assigned to you.</div>
+                <div id="example_66">
+                    <a th:href="@{/invitation}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
+                </div>
+            </div>
+            <div id="example_41">
+                <div id="example_72">Projects</div>
+                <div id="example_63">This section enables you to view all the projects that you own or you participate in. It will also enable you to click on a project to view the tasks associated with it and its other details.</div>
+                <div id="example_67">
+                    <a th:href="@{/invitation}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
+                </div>
+            </div>
+            <div id="example_42">
+                <div id="example_56">Reports</div>
+                <div id="example_64">In this section, you can generate reports to view the progress of tasks and projects. You can select a particular project to generate its report. This will help to track its status.</div>
+                <div id="example_68"> <a th:href="@{/invitation}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
+                </div>
+            </div>
+            <div id="example_43">
+                <div id="example_57">Invitations</div>
+                <div id="example_65">This section enables you to view the pending invitations sent by other users to participate in other projects. You can choose to either accept or reject an invitation.</div>
+                <div id="example_69"> <a th:href="@{/invitation}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+
+
+<div id="example_7">  </div>
+<div id="example_8">
+    <div id="example_128">
+        <div id="example_129">Copyright © San Jose State University. All Rights Reserved.</div>
+    </div>
+</div>
 </body>
 </html>

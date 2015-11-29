@@ -60,16 +60,16 @@ a:active {
     width:1170px;
     height:355px;
     clear:both;
-    margin-top:28px;
+    margin-top:10px;
     background-color:#ffffff;
     text-align:left;
 }
 
 #example_5{
     width:1170px;
-    height:354px;
+    height:290px;
     clear:both;
-    margin-top:30px;
+    margin-top:0px;
     background-color:#ffffff;
     text-align:left;
 }
@@ -651,9 +651,9 @@ a:active {
 
 #example_73{
     width:337px;
-    height:330px;
+    height:290px;
     margin-left:31px;
-    margin-top:24px;
+    margin-top:0px;
     float:left;
     display:inline;
     background-image: url(../images/example/example_73.png);
@@ -664,7 +664,7 @@ a:active {
     width:747px;
     height:250px;
     margin-left:29px;
-    margin-top:46px;
+    margin-top:0px;
     float:left;
     display:inline;
     text-align:left;
