@@ -35,6 +35,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private IUserDao userDao;
 
+
     @Transactional(value = "transManager")
     @Override
     public User createUser(String name, String email, String password) {
@@ -44,9 +45,15 @@ public class UserServiceImpl implements IUserService {
 
     @Transactional(value = "transManager")
     @Override
-    public boolean editUser(String name, String email, String password) {
-        User user = new User(name, email, password);
-        return userDao.updateUser(user);
+    public boolean editUser(User user) {
+        User currentUser = getUser(user.getId());
+        if (!user.getName().isEmpty())
+            currentUser.setName(user.getName());
+        if (!user.getEmail().isEmpty())
+            currentUser.setEmail(user.getEmail());
+        if (!user.getPassword().isEmpty())
+            currentUser.setPassword(user.getPassword());
+        return userDao.updateUser(currentUser);
     }
 
     @Transactional(value = "transManager")
@@ -105,7 +112,7 @@ public class UserServiceImpl implements IUserService {
                 if (in.getRequestStatus())
                     invitationList.remove(in); // This will provide only unaccepted invitations
             }
-            logger.info("There is at least one invitation for user id "+ownerId+" is pending for the approval");
+            logger.info("There is at least one invitation for user id " + ownerId + " is pending for the approval");
             return invitationList;
         } catch (NullPointerException e) {
             throw new NullPointerException("Invitation doesn't exists");
@@ -116,14 +123,14 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<Project> getParticipantProjectsById(long ownerId) {
         try {
-            List<Project> projectList=new ArrayList<>();
+            List<Project> projectList = new ArrayList<>();
             List<Invitation> invitationList = userDao.getInvitationsByOwnerId(ownerId);
             for (Invitation in : invitationList) {
                 if (in.getRequestStatus())
                     projectList.add(in.getProject());
             }
-            if(projectList.size()>0)
-                logger.info("There is at least one project available for which user "+ownerId+" is participant");
+            if (projectList.size() > 0)
+                logger.info("There is at least one project available for which user " + ownerId + " is participant");
             return projectList;
         } catch (NullPointerException e) {
             throw new NullPointerException("Invitation doesn't exists");

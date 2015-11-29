@@ -9,17 +9,25 @@ import java.util.List;
 
 /**
  * @author Naks
- * Interface to deliver User services.
+ *         Interface to deliver User services.
  */
 public interface IUserService {
 
-    User createUser(String name, String email,String password);
-    boolean editUser (String name, String email,String password);
-    boolean removeUser (long id);
-    User getUser (long id);
+    User createUser(String name, String email, String password);
+
+    boolean editUser(User user);
+
+    boolean removeUser(long id);
+
+    User getUser(long id);
+
     User verifyCredentials(String email, String password);
+
     List<Project> getProjectsByOwnerId(long ownerId);
-    List<Task> getTasksByOwnerId (long ownerId);
-    List<Invitation> getUnacceptedInvitations (long ownerId);
-    List<Project> getParticipantProjectsById (long ownerId);
+
+    List<Task> getTasksByOwnerId(long ownerId);
+
+    List<Invitation> getUnacceptedInvitations(long ownerId);
+
+    List<Project> getParticipantProjectsById(long ownerId);
 }

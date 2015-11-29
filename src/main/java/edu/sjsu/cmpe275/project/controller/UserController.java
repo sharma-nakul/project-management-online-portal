@@ -71,8 +71,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public String showSignUp(User user) {
-        logger.info("Redirecting to signup url");
+    public String showSignUp(User user, HttpServletRequest request) {
+        logger.info("Redirecting to " + request.getRequestURL());
         return Pages.signup.toString();
     }
 
@@ -100,16 +100,39 @@ public class UserController {
         }
     }
 
-    /*@RequestMapping(value="/user", method = RequestMethod.GET)
-    public String getPerson(Model model, HttpServletRequest request) {
-      session = request.getSession();
-      User user = (User) session.getAttribute("userDetails");
-      if (user != null) {
-          model.addAttribute("user", user);
-          return "user";
-      }
-      return "error";
-    }*/
+    @RequestMapping(value = "/update_user", method = RequestMethod.GET)
+    public String showUpdateUser(User user, HttpServletRequest request) {
+        logger.info("Redirecting to " + request.getRequestURL());
+        return Pages.updateuser.toString();
+    }
+
+    @RequestMapping(value = "/update_user", method = RequestMethod.POST)
+    public String updateUser(
+            @ModelAttribute(value = "user") User user, HttpServletRequest request, Model model) {
+        try {
+            boolean status;
+            session = request.getSession();
+            User currentUser=(User) session.getAttribute(userSession);
+            user.setId(currentUser.getId());
+            status = this.userService.editUser(user);
+            if (status) {
+                session.setAttribute(userSession, user);
+                logger.info(request.getRequestURL() + ": " + "Information update successful for " + user.getName());
+                return Pages.updateuser.toString();
+            } else
+                throw new BadRequestException("Cannot update user");
+        } catch (BadRequestException e) {
+            logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
+            model.addAttribute("updateError", true);
+            model.addAttribute("badException", e);
+            return Pages.updateuser.toString();
+        } catch (Exception e) {
+            logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
+            model.addAttribute("exception", e);
+            return Pages.error.toString();
+        }
+    }
+
 
     @RequestMapping(value = "/owned_projects", method = RequestMethod.GET)
     public String getOwnedProjects(HttpServletRequest request, Model model) {

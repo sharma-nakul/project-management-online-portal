@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * @author Naks
  *         Handler class for Project. The class intercept REST call to persist or retrieve data.
@@ -58,10 +56,5 @@ public class ProjectServiceImpl implements IProjectService {
         return projectDao.getProject(id);
     }
 
-    @Transactional(value = "transManager")
-    @Override
-    public List<Project> getProjectsById(long id) {
-        return projectDao.getProjectsByOwnerId(id);
-    }
 }
 
