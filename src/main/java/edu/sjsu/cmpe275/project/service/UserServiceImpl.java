@@ -1,12 +1,18 @@
 package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.dao.IUserDao;
+import edu.sjsu.cmpe275.project.model.Invitation;
+import edu.sjsu.cmpe275.project.model.Project;
+import edu.sjsu.cmpe275.project.model.Task;
 import edu.sjsu.cmpe275.project.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Naks
@@ -69,4 +75,59 @@ public class UserServiceImpl implements IUserService {
             throw new NullPointerException("Invalid Credentials!");
         }
     }
+
+    @Transactional(value = "transManager")
+    @Override
+    public List<Project> getProjectsByOwnerId(long ownerId) {
+        try {
+            return this.userDao.getProjectsByOwnerId(ownerId);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Project doesn't exists");
+        }
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public List<Task> getTasksByOwnerId(long ownerId) {
+        try {
+            return this.userDao.getTasksByOwnerId(ownerId);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Task doesn't exists");
+        }
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public List<Invitation> getUnacceptedInvitations(long ownerId) {
+        try {
+            List<Invitation> invitationList = userDao.getInvitationsByOwnerId(ownerId);
+            for (Invitation in : invitationList) {
+                if (in.getRequestStatus())
+                    invitationList.remove(in); // This will provide only unaccepted invitations
+            }
+            logger.info("There is at least one invitation for user id "+ownerId+" is pending for the approval");
+            return invitationList;
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Invitation doesn't exists");
+        }
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public List<Project> getParticipantProjectsById(long ownerId) {
+        try {
+            List<Project> projectList=new ArrayList<>();
+            List<Invitation> invitationList = userDao.getInvitationsByOwnerId(ownerId);
+            for (Invitation in : invitationList) {
+                if (in.getRequestStatus())
+                    projectList.add(in.getProject());
+            }
+            if(projectList.size()>0)
+                logger.info("There is at least one project available for which user "+ownerId+" is participant");
+            return projectList;
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Invitation doesn't exists");
+        }
+    }
+
 }

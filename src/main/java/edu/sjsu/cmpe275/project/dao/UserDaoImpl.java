@@ -1,14 +1,19 @@
 package edu.sjsu.cmpe275.project.dao;
 
+import edu.sjsu.cmpe275.project.model.Invitation;
+import edu.sjsu.cmpe275.project.model.Project;
+import edu.sjsu.cmpe275.project.model.Task;
 import edu.sjsu.cmpe275.project.model.User;
-import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -88,5 +93,38 @@ public class UserDaoImpl extends AbstractDao implements IUserDao {
         User user = null;
         user=(User) userByEmail.uniqueResult();
         return user;
+    }
+
+    @Override
+    public List<Project> getProjectsByOwnerId(long ownerId){
+        User user = getUser(ownerId);
+        Hibernate.initialize(user.getProjects());
+        List<Project> projectList = new ArrayList<>();
+        projectList.addAll(user.getProjects());
+        if(projectList.size()>0)
+            logger.info("There is at least one project available for user id "+ownerId);
+        return projectList;
+    }
+
+    @Override
+    public List<Task> getTasksByOwnerId (long ownerId){
+        User user = getUser(ownerId);
+        Hibernate.initialize(user.getTasks());
+        List<Task> taskList = new ArrayList<>();
+        taskList.addAll(user.getTasks());
+        if(taskList.size()>0)
+            logger.info("There is at least one task available for user id "+ownerId);
+        return taskList;
+    }
+
+    @Override
+    public List<Invitation> getInvitationsByOwnerId (long ownerId){
+        User user = getUser(ownerId);
+        Hibernate.initialize(user.getInvitations());
+        List<Invitation> invitationList = new ArrayList<>();
+        invitationList.addAll(user.getInvitations());
+        if(invitationList.size()>0)
+            logger.info("There is at least one invitation available for user id "+ownerId);
+        return invitationList;
     }
 }

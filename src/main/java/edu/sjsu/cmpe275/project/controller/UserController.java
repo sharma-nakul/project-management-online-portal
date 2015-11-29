@@ -1,8 +1,7 @@
 package edu.sjsu.cmpe275.project.controller;
 
 import edu.sjsu.cmpe275.project.exception.BadRequestException;
-import edu.sjsu.cmpe275.project.model.Pages;
-import edu.sjsu.cmpe275.project.model.User;
+import edu.sjsu.cmpe275.project.model.*;
 import edu.sjsu.cmpe275.project.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Naks
@@ -38,7 +38,7 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showLogin(User user, HttpServletRequest request) {
         session = request.getSession();
-        logger.info("Redirecting to "+request.getRequestURL());
+        logger.info("Redirecting to " + request.getRequestURL());
         return "login";
     }
 
@@ -49,7 +49,7 @@ public class UserController {
             if (!user.getEmail().isEmpty() && !user.getPassword().isEmpty()) {
                 user = this.userService.verifyCredentials(user.getEmail(), user.getPassword());
                 session.setAttribute(userSession, user);
-                logger.info(request.getRequestURL()+": "+"Login successful for "+user.getName());
+                logger.info(request.getRequestURL() + ": " + "Login successful for " + user.getName());
                 return Pages.home.toString();
             } else {
                 if (user.getEmail().isEmpty())
@@ -84,7 +84,7 @@ public class UserController {
                 user = this.userService.createUser(user.getName(), user.getEmail(), user.getPassword());
                 session = request.getSession();
                 session.setAttribute(userSession, user);
-                logger.info(request.getRequestURL()+": "+"Signup successful for "+user.getName());
+                logger.info(request.getRequestURL() + ": " + "Signup successful for " + user.getName());
                 return Pages.home.toString();
             } else
                 throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
@@ -110,5 +110,98 @@ public class UserController {
       }
       return "error";
     }*/
+
+    @RequestMapping(value = "/owned_projects", method = RequestMethod.GET)
+    public String getOwnedProjects(HttpServletRequest request, Model model) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                List<Project> projectList = userService.getProjectsByOwnerId(user.getId());
+                model.addAttribute("ownerProjects", projectList);
+                logger.info(request.getRequestURL() + ": Owned project list returned for " + user.getName());
+                return Pages.home.toString();
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+
+    @RequestMapping(value = "/participant_projects", method = RequestMethod.GET)
+    public String getParticipantProjects(HttpServletRequest request, Model model) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                List<Project> projectList = userService.getParticipantProjectsById(user.getId());
+                model.addAttribute("participant_projects", projectList);
+                logger.info(request.getRequestURL() + ": Participant project list returned for " + user.getName());
+                return Pages.home.toString();
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+
+    @RequestMapping(value = "/owned_tasks", method = RequestMethod.GET)
+    public String getOwnedTask(HttpServletRequest request, Model model) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                List<Task> taskList = userService.getTasksByOwnerId(user.getId());
+                model.addAttribute("owned_tasks", taskList);
+                logger.info(request.getRequestURL() + ": Owned task list returned for " + user.getName());
+                return Pages.home.toString();
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+
+    @RequestMapping(value = "/pending_invitations", method = RequestMethod.GET)
+    public String getPendingInvitation(HttpServletRequest request, Model model) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                List<Invitation> unacceptedInvitations = userService.getUnacceptedInvitations(user.getId());
+                model.addAttribute("invitations", unacceptedInvitations);
+                logger.info(request.getRequestURL() + ": Pending invitation(s) list returned for " + user.getName());
+                return Pages.invitation.toString();
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+
 
 }

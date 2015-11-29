@@ -12,13 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * @author Naks
@@ -52,7 +50,7 @@ public class ProjectController {
                 long projectId = this.projectService.createProject(project);
                 session.setAttribute("projectId", projectId);
                 logger.info(request.getRequestURL()+": "+"Project created successfully having project id "+projectId);
-                return Pages.home.toString();
+                return Pages.projects.toString();
             } else {
                 if (project.getTitle().isEmpty() && project.getDescription().isEmpty())
                     throw new BadRequestException("Please provide Title and Description.", HttpStatus.BAD_REQUEST.value(), "mandatory");
@@ -98,30 +96,5 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value = "/{owner_id}/projects", method = RequestMethod.GET)
-    public String getAllProjects(@PathVariable("owner_id") String ownerId, HttpServletRequest request, Model model) {
-        try {
-            session = request.getSession();
-            if (session == null)
-                throw new IllegalStateException("Session doesn't exist");
-            User user = (User) session.getAttribute(userSession);
-            if (user != null) {
-                if (Long.valueOf(ownerId) != (user.getId()))
-                    throw new NullPointerException("Owner doesn't have privileges for this request");
-                else {
-                    List<Project> projects = projectService.getProjectsById(user.getId());
-                    model.addAttribute("userProjects", projects);
-                    logger.info(request.getRequestURL()+": Project list returned for "+user.getName());
-                    return Pages.home.toString();
-                }
-            } else
-                throw new IllegalStateException("Session doesn't exist");
-        } catch (NullPointerException e) {
-            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        } catch (IllegalStateException e) {
-            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        }
-    }
+
 }

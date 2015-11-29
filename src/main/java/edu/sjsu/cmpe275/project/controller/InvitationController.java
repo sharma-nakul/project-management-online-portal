@@ -29,7 +29,7 @@ public class InvitationController {
     @Autowired
     IInvitationService invitationService;
     private HttpSession session;
-
+/*
     @RequestMapping(value = "/invitation", method = RequestMethod.GET)
     public String showInvitation(Model model, HttpServletRequest request) {
         try {
@@ -54,7 +54,7 @@ public class InvitationController {
             return "redirect:/" + Pages.login.toString();
         }
     }
-
+*/
     @RequestMapping(value = "/acceptinvitation/{id}", method = RequestMethod.POST)
     public String acceptInvitation(@PathVariable("id") String id, HttpServletRequest request, Model model) {
         try {
