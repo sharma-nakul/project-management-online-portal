@@ -2,10 +2,14 @@ package edu.sjsu.cmpe275.project.dao;
 
 import edu.sjsu.cmpe275.project.model.Task;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Naks
@@ -24,12 +28,12 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
     private Session session;
 
     @Override
-    public long addTask(Task Task) {
+    public long addTask(Task task) {
         session = getSession();
-        session.save(Task);
+        session.save(task);
         session.flush();
-        logger.info(Task.getTitle()+ " added successfully");
-        return Task.getId();
+        logger.info(task.getTitle()+ " added successfully");
+        return task.getId();
     }
 
     @Override
@@ -47,12 +51,13 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
     }
 
     @Override
-    public boolean deleteTask(Task Task) {
+    public boolean deleteTaskById(long taskId) {
         try {
             session = getSession();
-            session.delete(Task);
+            Task task = getTaskById(taskId);
+            session.delete(task);
             session.flush();
-            logger.info(Task.getTitle() + " deleted successfully");
+            logger.info(task.getTitle() + " deleted successfully");
             return true;
         } catch (HibernateException e) {
             logger.info("Hibernate Exception: " + e.getMessage());
@@ -61,13 +66,26 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
     }
 
     @Override
-    public Task getTask(long id) {
-        session = getSession();
-        Task Task = (Task) session.get(Task.class, id);
-        if (Task == null)
-            logger.info("Returns null while retrieving the Task id " + id);
+    public List<Task> getTaskByProjectId(long projectId) {
+        session=getSession();
+        Query taskByProjectId = session.createQuery("from TASK t where t.projectid=:projectId") ;
+        taskByProjectId.setParameter("projectId",projectId);
+        List<Task> taskListOfProject= (ArrayList<Task>)taskByProjectId.list();
+        if (taskListOfProject.size()>0)
+            logger.info("There is at least one task available for project id" + projectId);
         else
-            logger.info("Id " + id + " of a Task exists in database.");
-        return Task;
+            logger.info("Task list is empty for project id " + projectId);
+        return taskListOfProject;
+    }
+
+    @Override
+    public Task getTaskById(long taskId) {
+        session=getSession();
+        Task currentTask =(Task)session.get(Task.class,taskId);
+        if (currentTask!=null)
+            logger.info("Task exist of id " + taskId);
+        else
+            logger.info("There is no task of id " + taskId);
+        return currentTask;
     }
 }

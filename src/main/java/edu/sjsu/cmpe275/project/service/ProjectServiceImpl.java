@@ -22,7 +22,7 @@ public class ProjectServiceImpl implements IProjectService {
     /**
      * Object to log the values on console.
      */
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
 
     /**
      * Autowire the Project DAO interface object in this class

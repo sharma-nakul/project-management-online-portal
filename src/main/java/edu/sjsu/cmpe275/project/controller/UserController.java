@@ -133,7 +133,6 @@ public class UserController {
         }
     }
 
-
     @RequestMapping(value = "/owned_projects", method = RequestMethod.GET)
     public String getOwnedProjects(HttpServletRequest request, Model model) {
         try {
