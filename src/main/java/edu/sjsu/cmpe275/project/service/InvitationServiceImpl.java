@@ -4,6 +4,7 @@ import edu.sjsu.cmpe275.project.dao.IInvitationDao;
 import edu.sjsu.cmpe275.project.model.Invitation;
 import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.model.User;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class InvitationServiceImpl implements IInvitationService {
         List<User> participantList=new ArrayList<>();
         List<Invitation> invitationList = invitationDao.getProjectParticipantList(projectId);
         for (Invitation invitation : invitationList) {
+            Hibernate.initialize(invitation.getParticipant());
             participantList.add(invitation.getParticipant());
         }
         if(participantList.size()>0)

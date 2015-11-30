@@ -1,6 +1,7 @@
 package edu.sjsu.cmpe275.project.dao;
 
 import edu.sjsu.cmpe275.project.model.Invitation;
+
 import java.util.List;
 
 import java.util.ArrayList;
@@ -15,11 +16,11 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author Naks
- * Implementation class for Invitation DAO interface
- * Repository annotation to mark the class as repository entity for an invitation.
+ *         Implementation class for Invitation DAO interface
+ *         Repository annotation to mark the class as repository entity for an invitation.
  */
 @Repository
-public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
+public class InvitationDaoImpl extends AbstractDao implements IInvitationDao {
     /**
      * Variable of type logger to print data on console
      */
@@ -30,34 +31,32 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
     private Session session;
 
     @Override
-    public boolean updateInvitation (Invitation invitation){
+    public boolean updateInvitation(Invitation invitation) {
         try {
             session = getSession();
             session.update(invitation);
             session.flush();
-            logger.info("Invitation number "+invitation.getId() + " status updated successfully");
+            logger.info("Invitation number " + invitation.getId() + " status updated successfully");
             return true;
-        }
-        catch (HibernateException e)
-        {
-            logger.info("Hibernate Exception: " +e.getMessage());
+        } catch (HibernateException e) {
+            logger.info("Hibernate Exception: " + e.getMessage());
             return false;
         }
     }
 
     @Override
-    public Invitation getInvitation (long id){
+    public Invitation getInvitation(long id) {
         session = getSession();
-        Invitation invitation = (Invitation) session.get(Invitation.class,id);
+        Invitation invitation = (Invitation) session.get(Invitation.class, id);
         if (invitation == null)
             logger.info("Returns null while retrieving the invitation of id " + id);
         else
-            logger.info("Id " + id +" of an invitation exists in database.");
+            logger.info("Id " + id + " of an invitation exists in database.");
         return invitation;
     }
 
     @Override
-    public long saveInvitation (Invitation invitation) {
+    public long saveInvitation(Invitation invitation) {
         session = getSession();
         session.save(invitation);
         session.flush();
@@ -66,9 +65,9 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
     }
 
     @Override
-    public List<Invitation> getInvitations (long id) {
+    public List<Invitation> getInvitations(long id) {
         session = getSession();
-        Query getInvitations = session.createQuery("from INVITATION i where i.participant.id=:id and i.requestStatus = false") ;
+        Query getInvitations = session.createQuery("from INVITATION i where i.participant.id=:id and i.requestStatus = false");
         getInvitations.setParameter("id", id);
         List<Invitation> invitations = null;
         invitations = (ArrayList<Invitation>) getInvitations.list();
@@ -76,7 +75,7 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
     }
 
     @Override
-    public boolean removeInvitation (Invitation invitation){
+    public boolean removeInvitation(Invitation invitation) {
         try {
             session = getSession();
             session.delete(invitation);
@@ -90,11 +89,12 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
     }
 
     @Override
-    public List<Invitation> getProjectParticipantList (long projectId){
-        Criteria criteria=session.createCriteria(Invitation.class);
+    public List<Invitation> getProjectParticipantList(long projectId) {
+        session=getSession();
+        Criteria criteria = session.createCriteria(Invitation.class);
         criteria.add(Restrictions.eq("project.id", projectId));
         criteria.add(Restrictions.eq("requestStatus", true));
-        List<Invitation> acceptedProjectInvitation=(ArrayList<Invitation>) criteria.list();
+        List<Invitation> acceptedProjectInvitation = (ArrayList<Invitation>) criteria.list();
         if (acceptedProjectInvitation.size() > 0)
             logger.info("Database returned participant list of project id" + projectId);
         return acceptedProjectInvitation;
