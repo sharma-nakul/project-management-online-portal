@@ -1,12 +1,15 @@
 package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.dao.ITaskDao;
+import edu.sjsu.cmpe275.project.model.Report;
 import edu.sjsu.cmpe275.project.model.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Naks
@@ -74,6 +77,12 @@ public class TaskServiceImpl implements ITaskService {
     @Override
     public long countAllCancelledTaskByProject(long projectId){
         return taskDao.countAllCancelledTaskByProject(projectId);
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public List<Report> getFinishedTaskOfEachUser (long projectId){
+        return taskDao.getFinishedTaskOfEachUser(projectId);
     }
 
 }

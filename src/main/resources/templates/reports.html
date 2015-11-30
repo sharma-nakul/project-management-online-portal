@@ -6,6 +6,7 @@
 </head>
 <body>
 <h2>Report Page</h2>
+
 <div>
     <table>
         <tr>
@@ -23,6 +24,14 @@
         <tr>
             <td>Total Count</td>
             <td th:text="${allTaskCount}"></td>
+        </tr>
+        <tr>
+            <td>User Id</td>
+            <td>Count</td>
+        </tr>
+        <tr th:each="report : ${userFinishedTask}">
+            <td th:text="${report.userId}"></td>
+            <td th:text="${report.count}"></td>
         </tr>
     </table>
 </div>

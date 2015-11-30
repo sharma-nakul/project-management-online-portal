@@ -1,5 +1,6 @@
 package edu.sjsu.cmpe275.project.dao;
 
+import edu.sjsu.cmpe275.project.model.Report;
 import edu.sjsu.cmpe275.project.model.Task;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -7,9 +8,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Naks
@@ -78,7 +83,6 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
     }
 
 
-
     @Override
     public Task getTaskById(long taskId) {
         session = getSession();
@@ -91,41 +95,56 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
     }
 
     @Override
-    public long countFinishedTaskByProject(long projectId){
-        session=getSession();
-        Criteria criteria=session.createCriteria(Task.class);
+    public long countFinishedTaskByProject(long projectId) {
+        session = getSession();
+        Criteria criteria = session.createCriteria(Task.class);
         criteria.setProjection(Projections.rowCount());
         criteria.add(Restrictions.eq("state", Task.TaskState.FINISHED));
-        criteria.add(Restrictions.eq("project.id",projectId));
-        return (long)criteria.uniqueResult();
+        criteria.add(Restrictions.eq("project.id", projectId));
+        return (long) criteria.uniqueResult();
     }
 
     @Override
-    public long countUnfinishedTaskByProject(long projectId){
-        session=getSession();
-        Criteria criteria=session.createCriteria(Task.class);
+    public long countUnfinishedTaskByProject(long projectId) {
+        session = getSession();
+        Criteria criteria = session.createCriteria(Task.class);
         criteria.setProjection(Projections.rowCount());
         criteria.add(Restrictions.ne("state", Task.TaskState.FINISHED));
         criteria.add(Restrictions.eq("project.id", projectId));
-        return (long)criteria.uniqueResult();
+        return (long) criteria.uniqueResult();
     }
 
     @Override
-    public long countAllTaskByProject(long projectId){
-        session=getSession();
-        Criteria criteria=session.createCriteria(Task.class);
+    public long countAllTaskByProject(long projectId) {
+        session = getSession();
+        Criteria criteria = session.createCriteria(Task.class);
         criteria.setProjection(Projections.rowCount());
         criteria.add(Restrictions.eq("project.id", projectId));
-        return (long)criteria.uniqueResult();
+        return (long) criteria.uniqueResult();
     }
 
     @Override
-    public long countAllCancelledTaskByProject(long projectId){
-        session=getSession();
-        Criteria criteria=session.createCriteria(Task.class);
+    public long countAllCancelledTaskByProject(long projectId) {
+        session = getSession();
+        Criteria criteria = session.createCriteria(Task.class);
         criteria.setProjection(Projections.rowCount());
         criteria.add(Restrictions.eq("state", Task.TaskState.CANCELLED));
         criteria.add(Restrictions.eq("project.id", projectId));
-        return (long)criteria.uniqueResult();
+        return (long) criteria.uniqueResult();
+    }
+
+    @Override
+    public List<Report> getFinishedTaskOfEachUser(long projectId) {
+        session = getSession();
+        Criteria c1 = session.createCriteria(Task.class);
+        c1.setProjection(Projections.projectionList()
+                .add(Projections.groupProperty("assignee.id"), "userId")
+                .add(Projections.rowCount(), "count"));
+        c1.add(Restrictions.eq("state", Task.TaskState.FINISHED));
+        c1.add(Restrictions.eq("project.id", projectId));
+        c1.setResultTransformer(Transformers.aliasToBean(Report.class));
+        List<Report> reportList = new ArrayList<>();
+        reportList.addAll((List<Report>) c1.list());
+        return reportList;
     }
 }

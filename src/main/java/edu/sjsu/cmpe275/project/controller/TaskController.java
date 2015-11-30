@@ -2,6 +2,7 @@ package edu.sjsu.cmpe275.project.controller;
 
 import edu.sjsu.cmpe275.project.exception.BadRequestException;
 import edu.sjsu.cmpe275.project.model.Pages;
+import edu.sjsu.cmpe275.project.model.Report;
 import edu.sjsu.cmpe275.project.model.Task;
 import edu.sjsu.cmpe275.project.model.User;
 import edu.sjsu.cmpe275.project.service.ITaskService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Naks
@@ -140,7 +142,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/project_report", method = RequestMethod.GET)
-    public String getProjectReport(@RequestParam("id")String projectId, HttpServletRequest request, Model model) {
+    public String getProjectReport(@RequestParam("id") String projectId, HttpServletRequest request, Model model) {
         try {
             session = request.getSession();
             if (session == null)
@@ -149,12 +151,14 @@ public class TaskController {
             if (user != null) {
                 long countUnfinishedTaskByProject = taskService.countUnfinishedTaskByProject(Long.valueOf(projectId));
                 long countFinishedTaskByProject = taskService.countFinishedTaskByProject(Long.valueOf(projectId));
-                long countAllTaskByProject=taskService.countAllTaskByProject(Long.valueOf(projectId));
-                long countAllCancelledTaskByProject =taskService.countAllCancelledTaskByProject(Long.valueOf(projectId));
+                long countAllTaskByProject = taskService.countAllTaskByProject(Long.valueOf(projectId));
+                long countAllCancelledTaskByProject = taskService.countAllCancelledTaskByProject(Long.valueOf(projectId));
+                List<Report> countUserFinishedTask = taskService.getFinishedTaskOfEachUser(Long.valueOf(projectId));
                 model.addAttribute("unfinishedTaskCount", countUnfinishedTaskByProject);
                 model.addAttribute("finishedTaskCount", countFinishedTaskByProject);
                 model.addAttribute("allTaskCount", countAllTaskByProject);
                 model.addAttribute("cancelledTaskCount", countAllCancelledTaskByProject);
+                model.addAttribute("userFinishedTask", countUserFinishedTask);
                 logger.info(request.getRequestURL() + ": Tasks count returned for project id " + projectId);
                 return Pages.reports.toString();
             } else
