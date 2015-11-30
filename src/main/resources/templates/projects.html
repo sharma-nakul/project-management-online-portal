@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Project Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Projects</h1>
+
+<div>
+    <h2>My Projects as a participant</h2>
+    <table>
+        <tr>
+            <td>Title</td>
+            <td>Description</td>
+        </tr>
+        <tr th:each="project : ${participantProjects}">
+            <td th:text="${project.title}"></td>
+            <td th:text="${project.description}"></td>
+        </tr>
+    </table>
+    <div th:if="${projectCreateError==false}"><span style="color: #fe9f00" th:text="${project.title}"></span></div>
+</div>
+</body>
+</html>

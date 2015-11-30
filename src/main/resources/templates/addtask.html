@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Project Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2>Add Task</h2>
+<form action="#" th:action="@{/add_task}" th:object="${task}" method="post">
+    <div id="example_20">
+        <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;">
+            <tr>
+                <td style="font-size: 18px">Title</td>
+                <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{title}"/></td>
+            </tr>
+            <tr>
+                <td style="font-size: 18px">Description</td>
+                <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{description}"/></td>
+            </tr>
+            <tr>
+                <td style="font-size: 18px">Estimate Cost</td>
+                <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{estimate}"/></td>
+            </tr>
+            <tr>
+                <td style="font-size: 18px">Actual Cost</td>
+                <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text"
+                                                                  th:field="*{actual}"/></td>
+            </tr>
+            <tr>
+                <td style="font-size: 18px">Project Id</td>
+                <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text"
+                                                                  th:field="*{project.id}"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div th:if="${taskCreationError}"><span style="color: #ff0000"
+                                                            th:text="${badException.message}"></span></div>
+                </td>
+            </tr>
+        </table>
+
+        <br/></div>
+    <div id="example_21"><input type="submit"
+                                style="background-color:#1e8bc3; width: 137px; height: 45px; border: 0px; color: white; font-size: 18px; cursor: pointer "
+                                value="Add Task"/></div>
+</form>
+</body>
+</html>

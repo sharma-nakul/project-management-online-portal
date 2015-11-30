@@ -30,7 +30,7 @@ public class TaskController {
     /**
      * Variable of type logger to print data on console
      */
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     private static final String userSession = "userDetails";
 
@@ -39,7 +39,7 @@ public class TaskController {
     private HttpSession session;
 
     @RequestMapping(value = "/add_task", method = RequestMethod.GET)
-    public String showAddTask(HttpServletRequest request) {
+    public String showAddTask(Task task, HttpServletRequest request) {
         logger.info("Redirecting to " + request.getRequestURL());
         return Pages.addtask.toString();
     }
@@ -51,7 +51,7 @@ public class TaskController {
             if (!task.getTitle().isEmpty() && !task.getDescription().isEmpty()) {
                 session = request.getSession();
                 task.setState(Task.TaskState.NEW);
-                task.setAssignee((User)session.getAttribute(userSession));
+                task.setAssignee((User) session.getAttribute(userSession));
                 long taskId = taskService.createTask(task);
                 session.setAttribute("taskId", taskId);
                 logger.info(request.getRequestURL() + ": " + "Task created of id " + taskId);
@@ -71,16 +71,16 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/{task_id}/update_task", method = RequestMethod.GET)
-    public String showUpdateTask(@PathVariable("task_id") String taskId, HttpServletRequest request) {
+    public String showUpdateTask(@PathVariable("task_id") String taskId, Task task, HttpServletRequest request) {
         logger.info("Redirecting to " + request.getRequestURL());
-        return Pages.addtask.toString();
+        return Pages.updatetask.toString();
     }
 
     @RequestMapping(value = "/{task_id}/update_task", method = RequestMethod.POST)
     public String updateTask(@PathVariable("task_id") String taskId,
                              @ModelAttribute(value = "task") Task task, HttpServletRequest request, Model model) {
         try {
-            if (!task.getTitle().isEmpty() && !task.getDescription().isEmpty()) {
+            if (task != null) {
                 task.setId(Long.valueOf(taskId));
                 boolean status = taskService.editTask(task);
                 if (status) {
@@ -113,7 +113,7 @@ public class TaskController {
                 List<Task> taskList = taskService.getTaskByProjectId(Long.valueOf(projectId));
                 model.addAttribute("projectTaskList", taskList);
                 logger.info(request.getRequestURL() + ": Task(s) list returned for project id " + projectId);
-                return Pages.invitation.toString();
+                return Pages.task.toString();
             } else
                 throw new IllegalStateException("Session doesn't exist");
         } catch (NullPointerException e) {
@@ -127,13 +127,6 @@ public class TaskController {
 
     @RequestMapping(value = "/{task_id}/remove_task", method = RequestMethod.GET)
     public String showDeleteTask(@PathVariable("task_id") String taskId, HttpServletRequest request) {
-        logger.info("Redirecting to " + request.getRequestURL());
-        return Pages.task.toString();
-    }
-
-    @RequestMapping(value = "/{task_id}/remove_task", method = RequestMethod.POST)
-    public String deleteTask(@PathVariable("task_id") String taskId,
-                             @ModelAttribute(value = "task") Task task, HttpServletRequest request, Model model) {
         try {
             boolean status = taskService.removeTaskById(Long.valueOf(taskId));
             if (status) {
@@ -143,13 +136,11 @@ public class TaskController {
                 throw new BadRequestException("Error deleting task");
         } catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
-            model.addAttribute("taskDeletionError", true);
-            model.addAttribute("badException", e);
             return Pages.task.toString();
         } catch (Exception e) {
             logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
-            model.addAttribute("exception", e);
             return Pages.error.toString();
         }
     }
+
 }
