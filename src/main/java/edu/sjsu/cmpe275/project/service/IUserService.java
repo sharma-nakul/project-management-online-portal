@@ -28,4 +28,5 @@ public interface IUserService {
     List<Invitation> getUnacceptedInvitations(long ownerId);
 
     List<Project> getParticipantProjectsById(long ownerId);
+    User getUserByEmailId(String email);
 }

@@ -53,6 +53,9 @@
                         <div id="example_20">
                             <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;" >
                                 <tr>
+                                    <td colspan="2" ><div th:if="${signupError}"><span style="color: #ff0000" th:text="${badException.message}"></span></div></td>
+                                </tr>
+                                <tr>
                                     <td style="font-size: 18px">Name</td>
                                     <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{name}" /></td>
                                 </tr>
@@ -63,10 +66,6 @@
                                 <tr>
                                     <td style="font-size: 18px">Password</td>
                                     <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="password" th:field="*{password}" /></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><div th:if="${signupError}"><span style="color: #ff0000" th:text="${badException.message}"></span></div></td>
                                 </tr>
                             </table>
 

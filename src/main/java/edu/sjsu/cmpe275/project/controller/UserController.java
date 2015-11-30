@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
+import javax.mail.internet.InternetAddress;
 import java.util.List;
+import javax.mail.internet.AddressException;
 
 /**
  * @author Naks
@@ -76,16 +77,39 @@ public class UserController {
         return Pages.signup.toString();
     }
 
+    public static boolean isValidEmailAddress(String email) {
+        boolean result = true;
+        try {
+            InternetAddress emailAddr = new InternetAddress(email);
+            emailAddr.validate();
+        } catch (AddressException ex) {
+            result = false;
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signUp(
             @ModelAttribute(value = "user") User user, HttpServletRequest request, Model model) {
         try {
+
             if (!user.getName().isEmpty() && !user.getEmail().isEmpty() && !user.getPassword().isEmpty()) {
-                user = this.userService.createUser(user.getName(), user.getEmail(), user.getPassword());
-                session = request.getSession();
-                session.setAttribute(userSession, user);
-                logger.info(request.getRequestURL() + ": " + "Signup successful for " + user.getName());
-                return Pages.home.toString();
+                if (isValidEmailAddress(user.getEmail())){
+                    if (userService.getUserByEmailId(user.getEmail()) == null ){
+                        user = this.userService.createUser(user.getName(), user.getEmail(), user.getPassword());
+                        session = request.getSession();
+                        session.setAttribute(userSession, user);
+                        logger.info(request.getRequestURL() + ": " + "Signup successful for " + user.getName());
+                        return Pages.home.toString();
+                    }  else {
+                        throw new BadRequestException("User with this email exists");
+                    }
+
+                }  else
+                {
+                    throw new BadRequestException("Invalid Email");
+                }
+
             } else
                 throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
         } catch (BadRequestException e) {

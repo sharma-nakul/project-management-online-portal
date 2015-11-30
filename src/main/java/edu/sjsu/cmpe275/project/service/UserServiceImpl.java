@@ -78,6 +78,13 @@ public class UserServiceImpl implements IUserService {
 
     @Transactional(value = "transManager")
     @Override
+    public User getUserByEmailId(String email) {
+            User user = this.userDao.getUserByEmailId(email);
+            return user;
+    }
+
+    @Transactional(value = "transManager")
+    @Override
     public List<Project> getProjectsByOwnerId(long ownerId) {
         try {
             return this.userDao.getProjectsByOwnerId(ownerId);
