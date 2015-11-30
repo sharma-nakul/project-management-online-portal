@@ -14,5 +14,4 @@ public interface IInvitationDao {
     Invitation getInvitation (long id);
     long saveInvitation (Invitation invitation);
     List<Invitation> getInvitations (long id);
-    List<Invitation> getProjectParticipantList (long projectId);
 }

@@ -81,25 +81,4 @@ public class InvitationController {
         }
     }
 
-    @RequestMapping(value = "/{project_id}/participant", method = RequestMethod.GET)
-    public String getParticipantList(@RequestParam("project_id") String projectId, Model model, HttpServletRequest request) {
-        try {
-            session = request.getSession();
-            if (session == null)
-                throw new IllegalStateException("Session doesn't exist");
-            User user = (User) session.getAttribute(userSession);
-            if (user != null) {
-                List<User> participantList = invitationService.getParticipantList(Long.valueOf(projectId));
-                model.addAttribute("partcipantUsersByProject", participantList);
-                return "viewparticipant";
-            } else
-                throw new IllegalStateException("Session doesn't exist");
-        } catch (NullPointerException e) {
-            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        } catch (IllegalStateException e) {
-            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        }
-    }
 }

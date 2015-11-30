@@ -89,15 +89,4 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
         }
     }
 
-    @Override
-    public List<Invitation> getProjectParticipantList (long projectId){
-        Criteria criteria=session.createCriteria(Invitation.class);
-        criteria.add(Restrictions.eq("project.id", projectId));
-        criteria.add(Restrictions.eq("requestStatus", true));
-        List<Invitation> acceptedProjectInvitation=(ArrayList<Invitation>) criteria.list();
-        if (acceptedProjectInvitation.size() > 0)
-            logger.info("Database returned participant list of project id" + projectId);
-        return acceptedProjectInvitation;
-    }
-
 }

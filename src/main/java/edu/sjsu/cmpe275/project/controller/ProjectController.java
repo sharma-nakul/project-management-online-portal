@@ -3,8 +3,11 @@ package edu.sjsu.cmpe275.project.controller;
 import edu.sjsu.cmpe275.project.exception.BadRequestException;
 import edu.sjsu.cmpe275.project.model.Pages;
 import edu.sjsu.cmpe275.project.model.Project;
+import edu.sjsu.cmpe275.project.model.Task;
 import edu.sjsu.cmpe275.project.model.User;
+import edu.sjsu.cmpe275.project.service.IInvitationService;
 import edu.sjsu.cmpe275.project.service.IProjectService;
+import edu.sjsu.cmpe275.project.service.ITaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Naks
@@ -32,6 +36,7 @@ public class ProjectController {
     private static final String userSession = "userDetails";
     @Autowired
     IProjectService projectService;
+
     private HttpSession session;
 
     @RequestMapping(value = "/project", method = RequestMethod.POST)
@@ -89,7 +94,7 @@ public class ProjectController {
             logger.error("IllegalStateException: "+request.getRequestURL()+": "+e.getMessage());
             return "redirect:/" + Pages.login.toString();
         } catch (NullPointerException e) {
-            logger.error("NullPointerException: "+request.getRequestURL()+": "+message);
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + message);
             return "redirect:/" + Pages.login.toString();
         }
     }
@@ -104,8 +109,12 @@ public class ProjectController {
             User user = (User) session.getAttribute(userSession);
             if (user != null){
                 Project project = projectService.getProject(Long.valueOf(id));
-                logger.info("Redirecting to "+request.getRequestURL());
                 model.addAttribute("project", project);
+                List<User> participantList = projectService.getParticipantList(Long.valueOf(id));
+                model.addAttribute("partcipants", participantList);
+                List<Task> taskList = projectService.getTaskByProjectId(Long.valueOf(id));
+                model.addAttribute("tasks", taskList);
+                logger.info("Redirecting to "+request.getRequestURL());
                 return Pages.viewproject.toString();}
             else
                 throw new IllegalStateException(message);
@@ -118,21 +127,21 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value = "/{project_id}/update_project", method = RequestMethod.GET)
-    public String showUpdateProject(@PathVariable("project_id") String projectId, Project project, HttpServletRequest request) {
+    @RequestMapping(value = "/updateproject", method = RequestMethod.GET)
+    public String showUpdateProject(@RequestParam("id") String id, Project project, HttpServletRequest request) {
         logger.info("Redirecting to " + request.getRequestURL());
         return Pages.updateproject.toString();
     }
 
-    @RequestMapping(value = "/{project_id}/update_project", method = RequestMethod.POST)
-    public String updateProject(@PathVariable("project_id") String projectId,
+    @RequestMapping(value = "/updateproject", method = RequestMethod.POST)
+    public String updateProject(@RequestParam("id") String id,
                              @ModelAttribute(value = "project") Project project, HttpServletRequest request, Model model) {
         try {
             if (project != null) {
-                project.setId(Long.valueOf(projectId));
+                project.setId(Long.valueOf(id));
                 boolean status = projectService.editProject(project);
                 if (status) {
-                    logger.info(request.getRequestURL() + ": " + "Project updated of id " + projectId);
+                    logger.info(request.getRequestURL() + ": " + "Project updated of id " + id);
                     return Pages.updateproject.toString();
                 } else
                     throw new BadRequestException("Error updating project");

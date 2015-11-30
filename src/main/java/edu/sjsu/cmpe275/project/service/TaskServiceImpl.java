@@ -50,12 +50,6 @@ public class TaskServiceImpl implements ITaskService {
 
     @Transactional(value = "transManager")
     @Override
-    public List<Task> getTaskByProjectId(long projectId) {
-        return taskDao.getTaskByProjectId(projectId);
-    }
-
-    @Transactional(value = "transManager")
-    @Override
     public Task getTaskById(long taskId) {
         return taskDao.getTaskById(taskId);
     }

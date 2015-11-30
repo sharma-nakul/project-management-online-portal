@@ -1,11 +1,18 @@
 package edu.sjsu.cmpe275.project.dao;
 
+import edu.sjsu.cmpe275.project.model.Invitation;
 import edu.sjsu.cmpe275.project.model.Project;
+import edu.sjsu.cmpe275.project.model.Task;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Naks
@@ -77,6 +84,30 @@ public class ProjectDaoImpl extends AbstractDao implements IProjectDao {
         else
             logger.info("Id " + id + " of a project exists in database.");
         return project;
+    }
+
+    @Override
+    public List<Invitation> getProjectParticipantList (long projectId){
+        session = getSession();
+        Criteria criteria=session.createCriteria(Invitation.class);
+        criteria.add(Restrictions.eq("project.id", projectId));
+        criteria.add(Restrictions.eq("requestStatus", true));
+        List<Invitation> acceptedProjectInvitation=(ArrayList<Invitation>) criteria.list();
+        if (acceptedProjectInvitation.size() > 0)
+            logger.info("Database returned participant list of project id" + projectId);
+        return acceptedProjectInvitation;
+    }
+
+    @Override
+    public List<Task> getTaskByProjectId(long projectId) {
+        session = getSession();
+        Criteria taskByProjectId = session.createCriteria(Task.class).add(Restrictions.eq("project.id", projectId));
+        List<Task> taskListOfProject = (ArrayList<Task>) taskByProjectId.list();
+        if (taskListOfProject.size() > 0)
+            logger.info("There is at least one task available for project id " + projectId);
+        else
+            logger.info("Task list is empty for project id " + projectId);
+        return taskListOfProject;
     }
 
 }

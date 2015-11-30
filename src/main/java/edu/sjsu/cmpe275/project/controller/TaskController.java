@@ -102,7 +102,7 @@ public class TaskController {
         }
     }
 
-    @RequestMapping(value = "/{project_id}/task", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/{project_id}/task", method = RequestMethod.GET)
     public String getTasksByProjectId(@PathVariable("project_id") String projectId, HttpServletRequest request, Model model) {
         try {
             session = request.getSession();
@@ -123,7 +123,7 @@ public class TaskController {
             logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
             return "redirect:/" + Pages.login.toString();
         }
-    }
+    } */
 
     @RequestMapping(value = "/{task_id}/remove_task", method = RequestMethod.GET)
     public String showDeleteTask(@PathVariable("task_id") String taskId, HttpServletRequest request) {
