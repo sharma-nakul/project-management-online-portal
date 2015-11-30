@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -50,7 +51,7 @@ public class ProjectController {
                 long projectId = this.projectService.createProject(project);
                 session.setAttribute("projectId", projectId);
                 logger.info(request.getRequestURL()+": "+"Project created successfully having project id "+projectId);
-                return Pages.projects.toString();
+                return "redirect:/" + Pages.projects.toString();
             } else {
                 if (project.getTitle().isEmpty() && project.getDescription().isEmpty())
                     throw new BadRequestException("Please provide Title and Description.", HttpStatus.BAD_REQUEST.value(), "mandatory");
@@ -85,6 +86,30 @@ public class ProjectController {
             if (user != null){
                 logger.info("Redirecting to "+request.getRequestURL());
                 return Pages.project.toString();}
+            else
+                throw new IllegalStateException(message);
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: "+request.getRequestURL()+": "+e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: "+request.getRequestURL()+": "+message);
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+
+    @RequestMapping(value = "/viewproject", method = RequestMethod.GET)
+    public String viewProject(@RequestParam("id") String id, Model model, HttpServletRequest request) {
+        String message = "User should be logged in to view a project";
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null){
+                Project project = projectService.getProject(Long.valueOf(id));
+                logger.info("Redirecting to "+request.getRequestURL());
+                model.addAttribute("project", project);
+                return Pages.viewproject.toString();}
             else
                 throw new IllegalStateException(message);
         } catch (IllegalStateException e) {

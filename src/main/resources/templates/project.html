@@ -1,26 +1,57 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-
     <title>Project Manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../static/css/example.css" th:href="@{css/example.css}" rel="stylesheet" media="screen"/>
+    <script src="../static/js/gl_function.js" th:src="@{js/gl_function.js}"></script>
+    <script src="../static/js/jquery-1.8.2.min.js" th:src="@{js/jquery-1.8.2.min.js}"></script>
+    <script src="../static/js/jquery.slide.js" th:src="@{js/jquery.slide.js}"></script>
 </head>
-<form action="#" th:action="@{/project}" th:object="${project}" method="post">
-    <h3 align="left">Project Creation</h3>
+<body>
 
-    <table>
-        <tr>
-            <td>Title</td>
-            <td><input type="text" th:field="*{title}" /></td>
-        </tr>
-        <tr>
-            <td>Description</td>
-            <td><input type="text" th:field="*{description}" /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" /></td>
-        </tr>
-    </table>
-</form>
-<div th:if="${projectCreateError}"><span style="color: #ff0000" th:text="${badException.message}"></span></div>
+<center>
+    <div id="example_1">
+        <div id="example_9"><img id='img_9' src='../static/images/example/example_9.png' th:src="@{images/example/example_9.png}" width='370' height='138' border='0'/></div>
+        <div id="example_10"><a th:href="@{/home}" target='_self' title=''><img id='img_10' src='../static/images/example/example_10.png' th:src="@{images/example/example_10.png}" width='139' height='140' border='0'/></a></div>
+        <div id="example_11"><a th:href="@{/user}" target='_self' title=''><img id='img_11' src='../static/images/example/example_11.png' th:src="@{images/example/example_11.png}" width='138' height='140' border='0'/></a></div>
+        <div id="example_13"><a th:href="@{/projects}" target='_self' title=''><img id='img_13' src='../static/images/example/example_13.png' th:src="@{images/example/example_13.png}" width='142' height='140' border='0'/></a></div>
+        <div id="example_12"><a th:href="@{/reports}" target='_self' title=''><img id='img_12' src='../static/images/example/example_12.png' th:src="@{images/example/example_12.png}" width='137' height='140' border='0'/></a></div>
+        <div id="example_14"><a th:href="@{/invitation}" target='_self' title=''><img id='img_14' src='../static/images/example/example_14.png' th:src="@{images/example/example_14.png}" width='142' height='140' border='0'/></a></div>
+    </div>
+    <div id="example_4">
+        <div id="example_39">ADD PROJECT</div>
+        <div id="example_71">
+            <div th:if="${projectCreateError}"><span style="color: #ff0000" th:text="${badException.message}"></span></div>
+            <form action="#" th:action="@{/project}" th:object="${project}" method="post">
+
+                <br/>
+                <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;" >
+                    <tr>
+                        <td style="font-size: 18px">Title</td>
+                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{title}" /></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 18px">Description</td>
+                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{description}" /></td>
+                    </tr>
+                    <tr>
+
+                        <td> <br/><br/><input type="submit" style="background-color:#1e8bc3; width: 137px; height: 45px; border: 0px; color: white; font-size: 18px; cursor: pointer " value="Add Project"  />
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</center>
+
+
+<div id="example_7">  </div>
+<div id="example_8">
+    <div id="example_128">
+        <div id="example_129">Copyright © San Jose State University. All Rights Reserved.</div>
+    </div>
+</div>
+</body>
 </html>

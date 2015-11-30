@@ -6,5 +6,5 @@ package edu.sjsu.cmpe275.project.model;
  */
 public enum Pages {
     project, error, login, home, projects, signup, invitation, updateuser,
-    myaccount,addtask,updatetask,task
+    user, addtask,updatetask,task, reports,viewproject
 }

@@ -41,7 +41,7 @@ public class Project implements Serializable {
     private ProjectState state;
 
     /** Owner of the project. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "OWNERID")
     private User owner;
 

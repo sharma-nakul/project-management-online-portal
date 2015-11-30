@@ -65,7 +65,7 @@ public class ProjectDaoImpl extends AbstractDao implements IProjectDao {
     @Override
     public Project getProject(long id) {
         session = getSession();
-        Project project = (Project) session.get(User.class, id);
+        Project project = (Project) session.get(Project.class, id);
         if (project == null)
             logger.info("Returns null while retrieving the project id " + id);
         else

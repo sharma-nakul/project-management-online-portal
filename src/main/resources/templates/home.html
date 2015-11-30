@@ -12,11 +12,11 @@
 <center>
     <div id="example_1">
         <div id="example_9"><img id='img_9' src='../static/images/example/example_9.png' th:src="@{images/example/example_9.png}" width='370' height='138' border='0'/></div>
-        <div id="example_10"><a href='example.html' target='_self' title=''><img id='img_10' src='../static/images/example/example_10.png' th:src="@{images/example/example_10.png}" width='139' height='140' border='0'/></a></div>
-        <div id="example_11"><a href='example.html' target='_self' title=''><img id='img_11' src='../static/images/example/example_11.png' th:src="@{images/example/example_11.png}" width='138' height='140' border='0'/></a></div>
-        <div id="example_13"><a href='example.html' target='_self' title=''><img id='img_13' src='../static/images/example/example_13.png' th:src="@{images/example/example_13.png}" width='142' height='140' border='0'/></a></div>
-        <div id="example_12"><a href='example.html' target='_self' title=''><img id='img_12' src='../static/images/example/example_12.png' th:src="@{images/example/example_12.png}" width='137' height='140' border='0'/></a></div>
-        <div id="example_14"><a href='example.html' target='_self' title=''><img id='img_14' src='../static/images/example/example_14.png' th:src="@{images/example/example_14.png}" width='142' height='140' border='0'/></a></div>
+        <div id="example_10"><a th:href="@{/home}" target='_self' title=''><img id='img_10' src='../static/images/example/example_10.png' th:src="@{images/example/example_10.png}" width='139' height='140' border='0'/></a></div>
+        <div id="example_11"><a th:href="@{/user}" target='_self' title=''><img id='img_11' src='../static/images/example/example_11.png' th:src="@{images/example/example_11.png}" width='138' height='140' border='0'/></a></div>
+        <div id="example_13"><a th:href="@{/projects}" target='_self' title=''><img id='img_13' src='../static/images/example/example_13.png' th:src="@{images/example/example_13.png}" width='142' height='140' border='0'/></a></div>
+        <div id="example_12"><a th:href="@{/reports}" target='_self' title=''><img id='img_12' src='../static/images/example/example_12.png' th:src="@{images/example/example_12.png}" width='137' height='140' border='0'/></a></div>
+        <div id="example_14"><a th:href="@{/invitation}" target='_self' title=''><img id='img_14' src='../static/images/example/example_14.png' th:src="@{images/example/example_14.png}" width='142' height='140' border='0'/></a></div>
     </div>
     <div id="example_5">
         <div id="example_73">
@@ -50,20 +50,20 @@
                 <div id="example_54">My Account</div>
                 <div id="example_62">This section enables to view/edit your details. You can see the projects that you own and the projects that you participate in. You can also view the tasks that have been assigned to you.</div>
                 <div id="example_66">
-                    <a th:href="@{/invitation}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
+                    <a th:href="@{/user}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
                 </div>
             </div>
             <div id="example_41">
                 <div id="example_72">Projects</div>
                 <div id="example_63">This section enables you to view all the projects that you own or you participate in. It will also enable you to click on a project to view the tasks associated with it and its other details.</div>
                 <div id="example_67">
-                    <a th:href="@{/invitation}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
+                    <a th:href="@{/projects}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
                 </div>
             </div>
             <div id="example_42">
                 <div id="example_56">Reports</div>
                 <div id="example_64">In this section, you can generate reports to view the progress of tasks and projects. You can select a particular project to generate its report. This will help to track its status.</div>
-                <div id="example_68"> <a th:href="@{/invitation}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
+                <div id="example_68"> <a th:href="@{/reports}" target='_self' title=''><img src="../static/images/example/hovered-arrow-3.png" th:src="@{images/example/hovered-arrow-3.png}" width='50' height='47' border='0'/></a>
                 </div>
             </div>
             <div id="example_43">

@@ -19,7 +19,7 @@ public class Invitation implements Serializable {
     /**
      * Participant of the project.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PARTICIPANTID")
     private User participant;
 
@@ -27,7 +27,7 @@ public class Invitation implements Serializable {
     /**
      * Project.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PROJECTID")
     private Project project;
 
