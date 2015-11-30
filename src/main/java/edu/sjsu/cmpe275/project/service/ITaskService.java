@@ -14,4 +14,6 @@ public interface ITaskService {
     boolean removeTaskById (long taskId);
     List<Task> getTaskByProjectId (long projectId);
     Task getTaskById (long taskId);
+    long countFinishedTaskByProject(long projectId);
+    long countUnfinishedTaskByProject(long projectId);
 }

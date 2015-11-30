@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -121,5 +118,36 @@ public class ProjectController {
         }
     }
 
+    @RequestMapping(value = "/{project_id}/update_project", method = RequestMethod.GET)
+    public String showUpdateProject(@PathVariable("project_id") String projectId, Project project, HttpServletRequest request) {
+        logger.info("Redirecting to " + request.getRequestURL());
+        return Pages.updateproject.toString();
+    }
+
+    @RequestMapping(value = "/{project_id}/update_project", method = RequestMethod.POST)
+    public String updateProject(@PathVariable("project_id") String projectId,
+                             @ModelAttribute(value = "project") Project project, HttpServletRequest request, Model model) {
+        try {
+            if (project != null) {
+                project.setId(Long.valueOf(projectId));
+                boolean status = projectService.editProject(project);
+                if (status) {
+                    logger.info(request.getRequestURL() + ": " + "Project updated of id " + projectId);
+                    return Pages.updateproject.toString();
+                } else
+                    throw new BadRequestException("Error updating project");
+            } else
+                throw new BadRequestException("Required fields are missing while updating project", HttpStatus.BAD_REQUEST.value(), "mandatory");
+        } catch (BadRequestException e) {
+            logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
+            model.addAttribute("projectUpdateError", true);
+            model.addAttribute("badException", e);
+            return Pages.updateproject.toString();
+        } catch (Exception e) {
+            logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
+            model.addAttribute("exception", e);
+            return Pages.error.toString();
+        }
+    }
 
 }

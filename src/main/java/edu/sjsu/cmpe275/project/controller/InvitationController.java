@@ -1,8 +1,6 @@
 package edu.sjsu.cmpe275.project.controller;
 
-import edu.sjsu.cmpe275.project.model.Invitation;
-import edu.sjsu.cmpe275.project.model.Pages;
-import edu.sjsu.cmpe275.project.model.User;
+import edu.sjsu.cmpe275.project.model.*;
 import edu.sjsu.cmpe275.project.service.IInvitationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,32 +28,7 @@ public class InvitationController {
     @Autowired
     IInvitationService invitationService;
     private HttpSession session;
-/*
-    @RequestMapping(value = "/invitation", method = RequestMethod.GET)
-    public String showInvitation(Model model, HttpServletRequest request) {
-        try {
-            session = request.getSession();
-            if (session == null)
-                throw new IllegalStateException("Session doesn't exist");
-            User user = (User) session.getAttribute(userSession);
-            if (user != null) {
-                List<Invitation> invitations = invitationService.getInvitations(user.getId());
-                model.addAttribute("invitations", invitations);
-                logger.info(request.getRequestURL()+": Invitation list returned for "+user.getName());
-                return Pages.invitation.toString();
-            } else {
-                logger.info(request.getRequestURL()+": Invitation user doesn't exist");
-                return "redirect:/" + Pages.login.toString();
-            }
-        } catch (IllegalStateException e) {
-            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        } catch (NullPointerException e) {
-            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        }
-    }
-*/
+
     @RequestMapping(value = "/acceptinvitation/{id}", method = RequestMethod.POST)
     public String acceptInvitation(@PathVariable("id") String id, HttpServletRequest request, Model model) {
         try {
@@ -66,10 +40,10 @@ public class InvitationController {
             if (user != null) {
                 List<Invitation> invitations = invitationService.getInvitations(user.getId());
                 model.addAttribute("invitations", invitations);
-                logger.info(request.getRequestURL()+": Invitation accepted for "+user.getName());
+                logger.info(request.getRequestURL() + ": Invitation accepted for " + user.getName());
                 return Pages.invitation.toString();
             } else {
-                logger.info(request.getRequestURL()+": Accept invitation user doesn't exist");
+                logger.info(request.getRequestURL() + ": Accept invitation user doesn't exist");
                 return "redirect:/" + Pages.login.toString();
             }
         } catch (IllegalStateException e) {
@@ -92,10 +66,10 @@ public class InvitationController {
             if (user != null) {
                 List<Invitation> invitations = invitationService.getInvitations(user.getId());
                 model.addAttribute("invitations", invitations);
-                logger.info(request.getRequestURL()+": Invitation rejected for "+user.getName());
+                logger.info(request.getRequestURL() + ": Invitation rejected for " + user.getName());
                 return Pages.invitation.toString();
             } else {
-                logger.info(request.getRequestURL()+": Reject invitation user doesn't exists for "+user.getName());
+                logger.info(request.getRequestURL() + ": Reject invitation user doesn't exists for " + user.getName());
                 return "redirect:/" + Pages.login.toString();
             }
         } catch (IllegalStateException e) {
@@ -103,6 +77,28 @@ public class InvitationController {
             return "redirect:/" + Pages.login.toString();
         } catch (NullPointerException e) {
             logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+
+    @RequestMapping(value = "/{project_id}/participant", method = RequestMethod.GET)
+    public String getParticipantList(@RequestParam("project_id") String projectId, Model model, HttpServletRequest request) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                List<User> participantList = invitationService.getParticipantList(Long.valueOf(projectId));
+                model.addAttribute("partcipantUsersByProject", participantList);
+                return "viewparticipant";
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
             return "redirect:/" + Pages.login.toString();
         }
     }

@@ -2,7 +2,6 @@ package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.dao.IProjectDao;
 import edu.sjsu.cmpe275.project.model.Project;
-import edu.sjsu.cmpe275.project.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +37,7 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Transactional(value = "transManager")
     @Override
-    public boolean editProject(String title, String description, Project.ProjectState state, User owner) {
-        Project project = new Project(title, description, owner, state);
+    public boolean editProject(Project project) {
         return projectDao.updateProject(project);
     }
 

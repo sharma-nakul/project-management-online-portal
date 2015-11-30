@@ -14,4 +14,7 @@ public interface ITaskDao {
     boolean deleteTaskById (long taskId);
     List<Task> getTaskByProjectId (long projectId);
     Task getTaskById (long taskId);
+    long countFinishedTaskByProject(long projectId);
+    long countUnfinishedTaskByProject(long projectId);
+   // long countAllTaskByProject(long projectId);
 }

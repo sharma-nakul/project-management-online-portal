@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Project Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2>Participant List by Project Id</h2>
+<div>
+    <table>
+        <tr th:each="user : ${partcipantUsersByProject}">
+            <td th:text="${user.name}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

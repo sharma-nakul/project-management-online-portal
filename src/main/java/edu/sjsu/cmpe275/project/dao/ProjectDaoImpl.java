@@ -1,7 +1,6 @@
 package edu.sjsu.cmpe275.project.dao;
 
 import edu.sjsu.cmpe275.project.model.Project;
-import edu.sjsu.cmpe275.project.model.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -37,8 +36,15 @@ public class ProjectDaoImpl extends AbstractDao implements IProjectDao {
     @Override
     public boolean updateProject(Project project) {
         try {
+            Project currentProject = getProject(project.getId());
+            if (!project.getTitle().isEmpty())
+                currentProject.setTitle(project.getTitle());
+            if (!project.getDescription().isEmpty())
+                currentProject.setDescription(project.getDescription());
+            if (!project.getState().toString().isEmpty())
+                currentProject.setState(project.getState());
             session = getSession();
-            session.update(project);
+            session.update(currentProject);
             session.flush();
             logger.info(project.getTitle() + " updated successfully");
             return true;

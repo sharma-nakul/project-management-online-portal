@@ -4,9 +4,11 @@ import edu.sjsu.cmpe275.project.model.Invitation;
 import java.util.List;
 
 import java.util.ArrayList;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
+
+import edu.sjsu.cmpe275.project.model.Task;
+import edu.sjsu.cmpe275.project.model.User;
+import org.hibernate.*;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -79,12 +81,23 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
             session = getSession();
             session.delete(invitation);
             session.flush();
-            logger.info("Inivitation deleted successfully");
+            logger.info("Invitation deleted successfully");
             return true;
         } catch (HibernateException e) {
             logger.info("Hibernate Exception: " + e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public List<Invitation> getProjectParticipantList (long projectId){
+        Criteria criteria=session.createCriteria(Invitation.class);
+        criteria.add(Restrictions.eq("project.id", projectId));
+        criteria.add(Restrictions.eq("requestStatus", true));
+        List<Invitation> acceptedProjectInvitation=(ArrayList<Invitation>) criteria.list();
+        if (acceptedProjectInvitation.size() > 0)
+            logger.info("Database returned participant list of project id" + projectId);
+        return acceptedProjectInvitation;
     }
 
 }

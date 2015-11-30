@@ -1,7 +1,11 @@
 package edu.sjsu.cmpe275.project.dao;
 
 import edu.sjsu.cmpe275.project.model.Task;
-import org.hibernate.*;
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,4 +102,25 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
             logger.info("There is no task of id " + taskId);
         return currentTask;
     }
+
+    @Override
+    public long countFinishedTaskByProject(long projectId){
+        session=getSession();
+        Criteria criteria=session.createCriteria(Task.class);
+        criteria.setProjection(Projections.rowCount());
+        criteria.add(Restrictions.eq("state", Task.TaskState.FINISHED));
+        criteria.add(Restrictions.eq("project.id",projectId));
+        return (long)criteria.uniqueResult();
+    }
+
+    @Override
+    public long countUnfinishedTaskByProject(long projectId){
+        session=getSession();
+        Criteria criteria=session.createCriteria(Task.class);
+        criteria.setProjection(Projections.rowCount());
+        criteria.add(Restrictions.ne("state", Task.TaskState.FINISHED));
+        criteria.add(Restrictions.eq("project.id", projectId));
+        return (long)criteria.uniqueResult();
+    }
+
 }

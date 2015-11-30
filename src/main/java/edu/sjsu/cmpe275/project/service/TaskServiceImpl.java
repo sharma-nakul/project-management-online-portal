@@ -60,4 +60,15 @@ public class TaskServiceImpl implements ITaskService {
         return taskDao.getTaskById(taskId);
     }
 
+    @Transactional(value = "transManager")
+    @Override
+    public long countFinishedTaskByProject(long projectId){
+        return taskDao.countFinishedTaskByProject(projectId);
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public long countUnfinishedTaskByProject(long projectId){
+        return taskDao.countUnfinishedTaskByProject(projectId);
+    }
 }
