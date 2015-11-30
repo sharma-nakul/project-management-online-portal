@@ -11,9 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Naks
  *         Implementation class for Task DAO interface
@@ -80,17 +77,7 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
         }
     }
 
-    @Override
-    public List<Task> getTaskByProjectId(long projectId) {
-        session = getSession();
-        Criteria taskByProjectId = session.createCriteria(Task.class).add(Restrictions.eq("project.id", projectId));
-        List<Task> taskListOfProject = (ArrayList<Task>) taskByProjectId.list();
-        if (taskListOfProject.size() > 0)
-            logger.info("There is at least one task available for project id " + projectId);
-        else
-            logger.info("Task list is empty for project id " + projectId);
-        return taskListOfProject;
-    }
+
 
     @Override
     public Task getTaskById(long taskId) {

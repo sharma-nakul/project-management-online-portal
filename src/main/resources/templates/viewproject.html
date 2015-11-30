@@ -18,12 +18,73 @@
         <div id="example_12"><a th:href="@{/reports}" target='_self' title=''><img id='img_12' src='../static/images/example/example_12.png' th:src="@{images/example/example_12.png}" width='137' height='140' border='0'/></a></div>
         <div id="example_14"><a th:href="@{/invitation}" target='_self' title=''><img id='img_14' src='../static/images/example/example_14.png' th:src="@{images/example/example_14.png}" width='142' height='140' border='0'/></a></div>
     </div>
-    <div id="example_4">
-        <div id="example_39">VIEW PROJECT</div>
-        <div id="example_71">
+    <div style="height: 100%"  id="example_4">
+
             <table>
                 <tr>
-                    <td th:text="${project.title}"></td>
+                    <td id="example_39">
+                        VIEW PROJECT   &nbsp; &nbsp;
+                    </td>
+                    <td >
+                        <form action="#" th:action="@{/updateproject}">
+                            <input type="submit" style="margin-top:30px;background-color:#1e8bc3; width: 127px; height: 35px; border: 0px; color: white; font-size: 16px; cursor: pointer " value="Edit Project"  />
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+
+
+        <div id="example_71">
+            <br/>
+            <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;" >
+                <tr>
+                    <td style="font-size: 18px">Title:</td>
+                    <td style="font-size: 18px" th:text="${project.title}"></td>
+                </tr>
+                <tr>
+                    <td style="font-size: 18px; padding-top: 10px">Description:</td>
+                    <td style="font-size: 18px; padding-top: 10px" th:text="${project.description}"></td>
+                </tr>
+                <tr>
+                    <td style="font-size: 18px; padding-top: 10px">Status:</td>
+                    <td style="font-size: 18px; padding-top: 10px" th:text="${project.state}"></td>
+                </tr>
+                <tr>
+                    <td style="font-size: 18px; padding-top: 10px">Owner:</td>
+                    <td style="font-size: 18px; padding-top: 10px" th:text="${project.owner.name}"></td>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <h1 style="color: darkgreen; font-size: 20px; font-style: italic" >Participants</h1>
+            <table >
+                <tr><th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 300px; height: 30px; font-size: 16px">NAME</th>
+                    <th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 700px; height: 30px; font-size: 16px">EMAIL</th>
+                </tr>
+                <tr th:each="user: ${partcipants} ">
+                    <td th:text="${user.name}"  style="border: 3px; color:blue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 18px" ></td>
+                    <td th:text="${user.email}" style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 18px" ></td>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <h1 style="color: darkgreen; font-size: 20px; font-style: italic" >Tasks</h1>
+            <table >
+                <tr><th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 300px; height: 30px; font-size: 16px">TITLE</th>
+                    <th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 700px; height: 30px; font-size: 16px">DESCRIPTION</th>
+                    <th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 300px; height: 30px; font-size: 16px">STATUS</th>
+                    <th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 300px; height: 30px; font-size: 16px">PROJECT</th>
+                    <th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 300px; height: 30px; font-size: 16px">ESTIMATED WORK</th>
+                    <th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 300px; height: 30px; font-size: 16px">ACTUAL WORK</th>
+                </tr>
+                <tr th:each="task: ${tasks} ">
+                    <td style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 18px" ><a style="color: steelblue; text-decoration: underline "  th:href="@{/viewproject(id=${task.id})}" target='_self' th:text="${task.title}"/></td>
+                    <td th:text="${task.description}" style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 18px" ></td>
+                    <td th:text="${task.state}" style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 16px" ></td>
+                    <td th:text="${task.project.title}" style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 16px" ></td>
+                    <td th:text="${task.estimate}" style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 16px" ></td>
+                    <td th:text="${task.actual}" style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 16px" ></td>
                 </tr>
             </table>
         </div>

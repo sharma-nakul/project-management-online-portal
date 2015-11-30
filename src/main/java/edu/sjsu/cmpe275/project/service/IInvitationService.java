@@ -18,6 +18,5 @@ public interface IInvitationService {
 
     List<Invitation> getInvitations(long id);
 
-    List<User> getParticipantList(long projectId);
 
 }

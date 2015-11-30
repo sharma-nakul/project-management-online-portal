@@ -1,6 +1,10 @@
 package edu.sjsu.cmpe275.project.service;
 
 import edu.sjsu.cmpe275.project.model.Project;
+import edu.sjsu.cmpe275.project.model.Task;
+import edu.sjsu.cmpe275.project.model.User;
+
+import java.util.List;
 
 /**
  * @author Naks
@@ -14,4 +18,8 @@ public interface IProjectService {
     boolean removeProject(long id);
 
     Project getProject(long id);
+
+    List<User> getParticipantList(long projectId);
+
+    List<Task> getTaskByProjectId (long projectId);
 }

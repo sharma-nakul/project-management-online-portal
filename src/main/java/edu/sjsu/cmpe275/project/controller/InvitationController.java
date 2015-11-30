@@ -1,8 +1,6 @@
 package edu.sjsu.cmpe275.project.controller;
 
-import edu.sjsu.cmpe275.project.model.Invitation;
-import edu.sjsu.cmpe275.project.model.Pages;
-import edu.sjsu.cmpe275.project.model.User;
+import edu.sjsu.cmpe275.project.model.*;
 import edu.sjsu.cmpe275.project.service.IInvitationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -82,26 +81,4 @@ public class InvitationController {
         }
     }
 
-    @RequestMapping(value = "/{project_id}/participant", method = RequestMethod.GET)
-    public String getParticipantList(@PathVariable("project_id") String projectId, Model model, HttpServletRequest request) {
-        try {
-            session = request.getSession();
-            if (session == null)
-                throw new IllegalStateException("Session doesn't exist");
-            User user = (User) session.getAttribute(userSession);
-            if (user != null) {
-                List<User> participantList = invitationService.getParticipantList(Long.valueOf(projectId));
-                model.addAttribute("partcipantUsersByProject", participantList);
-                return "viewparticipant";
-            } else
-                throw new IllegalStateException("Session doesn't exist");
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        } catch (IllegalStateException e) {
-            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
-            return "redirect:/" + Pages.login.toString();
-        }
-    }
 }
