@@ -100,6 +100,23 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value="/logout", method = RequestMethod.GET)
+    public String logout(User user, Model model, HttpServletRequest request) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            session.invalidate();
+            return Pages.login.toString();
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+
     @RequestMapping(value="/user", method = RequestMethod.GET)
     public String getUser(Model model, HttpServletRequest request) {
         try {
