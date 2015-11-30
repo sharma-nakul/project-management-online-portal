@@ -17,6 +17,8 @@ public interface IInvitationService {
     Invitation getInvitation(long id);
 
     List<Invitation> getInvitations(long id);
+    Project getProject(long id);
 
-
+    List<User> getParticipantList(long projectId);
+    List<User> getNonParticipants(long id);
 }

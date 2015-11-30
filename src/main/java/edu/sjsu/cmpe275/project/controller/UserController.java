@@ -2,6 +2,7 @@ package edu.sjsu.cmpe275.project.controller;
 
 import edu.sjsu.cmpe275.project.exception.BadRequestException;
 import edu.sjsu.cmpe275.project.model.*;
+import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -169,6 +169,49 @@ public class UserController {
         } catch (IllegalStateException e) {
             logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
             return "redirect:/" + Pages.login.toString();
+        }
+    }
+
+    @RequestMapping(value = "/viewreport", method = RequestMethod.GET)
+    public String viewReport(Project project, Model model, HttpServletRequest request) {
+         logger.info("Redirecting to " + request.getRequestURL());
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                List<Project> projectList = userService.getProjectsByOwnerId(user.getId());
+                projectList.addAll(userService.getParticipantProjectsById(user.getId()));
+                model.addAttribute("projectList", projectList);
+                logger.info(request.getRequestURL() + ": project list returned for " + user.getName());
+                return Pages.viewreport.toString();
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        }
+    }
+    @RequestMapping(value = "/viewreport", method = RequestMethod.POST)
+    public String sendViewReport(
+                                @ModelAttribute(value = "project") Project project, HttpServletRequest request, Model model) {
+        try {
+            if (project != null) {
+                return "redirect:/" + Pages.reports.toString() + "?id=" + project.getId();
+            } else
+                throw new BadRequestException("Required fields are missing while sending invitation", HttpStatus.BAD_REQUEST.value(), "mandatory");
+        } catch (BadRequestException e) {
+            logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
+            model.addAttribute("badException", e);
+            return Pages.updateproject.toString();
+        } catch (Exception e) {
+            logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
+            model.addAttribute("exception", e);
+            return Pages.error.toString();
         }
     }
 

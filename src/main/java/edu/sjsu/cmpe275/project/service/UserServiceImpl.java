@@ -101,11 +101,18 @@ public class UserServiceImpl implements IUserService {
     public List<Invitation> getUnacceptedInvitations(long ownerId) {
         try {
             List<Invitation> invitationList = userDao.getInvitationsByOwnerId(ownerId);
-            for (Invitation in : invitationList) {
-                if (in.getRequestStatus())
-                    invitationList.remove(in); // This will provide only unaccepted invitations
+            List<Invitation> newInvitationList = new ArrayList<Invitation>() ;
+            logger.info("invitationList Count: " + invitationList.size());
+            for (Invitation in: invitationList) {
+                logger.info("RequestId: " + in.getId());
+                logger.info("RequestStatus: " + in.getRequestStatus());
+                if (in.getRequestStatus()) {
+                    newInvitationList.add(in); // This will provide only unaccepted invitations
+                }
             }
+            invitationList.removeAll(newInvitationList);
             logger.info("There is at least one invitation for user id " + ownerId + " is pending for the approval");
+            logger.info("invitationList Count: " + invitationList.size());
             return invitationList;
         } catch (NullPointerException e) {
             throw new NullPointerException("Invitation doesn't exists");

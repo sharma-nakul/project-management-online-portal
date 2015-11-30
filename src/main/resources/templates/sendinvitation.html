@@ -19,29 +19,28 @@
         <div id="example_14"><a th:href="@{/invitation}" target='_self' title=''><img id='img_14' src='../static/images/example/example_14.png' th:src="@{images/example/example_14.png}" width='142' height='140' border='0'/></a></div>
     </div>
     <div id="example_4">
-        <div id="example_39">EDIT MY DETAILS</div>
+        <div id="example_39">INVITE PARTICIPANT</div>
         <div id="example_71">
             <br />
-            <form action="#" th:action="@{/updateuser}" th:object="${user}" method="post">
+            <div th:if="${sendInvitationError}"><span style="color: #ff0000"
+                                                     th:text="${badException.message}"></span></div>
+            <form action="#" th:action="@{/sendinvitation(id=${project.id})}" th:object="${invitation}" method="post">
 
-                    <div th:if="${updateError}"><span style="color: #ff0000" th:text="${badException.message}"></span></div>
-                    <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;" >
-                        <tr>
-                            <td style="font-size: 18px">Name</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{name}" /></td>
-                        </tr>
-                        <tr>
-                            <td style="font-size: 18px">Email</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{email}" /></td>
-                        </tr>
-                        <tr>
-                            <td style="font-size: 18px">New Password</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="password" th:field="*{password}" /></td>
-                        </tr>
-                    </table>
+                <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;">
+                    <tr>
+                        <td style="font-size: 18px">Select User: &nbsp;</td>
+                        <td>
+                            <select style="font-size: 14px" th:field="*{participant.id}">
+                                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}">Wireframe</option>
+                            </select>
+                        </td>
+                    </tr>
 
-                    <br /> <br />
-                <input type="submit" style="background-color:#1e8bc3; width: 137px; height: 45px; border: 0px; color: white; font-size: 18px; cursor: pointer " value="Save Changes"  />
+                </table>
+
+                <br/> <br />
+                <input type="submit" style="background-color:#1e8bc3; width: 137px; height: 45px; border: 0px; color: white; font-size: 18px; cursor: pointer "
+                       value="Send Invitation"/>
             </form>
 
         </div>
@@ -57,4 +56,3 @@
 </div>
 </body>
 </html>
-

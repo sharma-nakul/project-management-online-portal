@@ -1,21 +1,17 @@
 package edu.sjsu.cmpe275.project.controller;
 
 import edu.sjsu.cmpe275.project.exception.BadRequestException;
-import edu.sjsu.cmpe275.project.model.Pages;
-import edu.sjsu.cmpe275.project.model.Project;
-import edu.sjsu.cmpe275.project.model.Task;
-import edu.sjsu.cmpe275.project.model.User;
+import edu.sjsu.cmpe275.project.model.*;
+import edu.sjsu.cmpe275.project.service.IInvitationService;
 import edu.sjsu.cmpe275.project.service.IProjectService;
+import edu.sjsu.cmpe275.project.service.ITaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -143,7 +139,7 @@ public class ProjectController {
                 boolean status = projectService.editProject(project);
                 if (status) {
                     logger.info(request.getRequestURL() + ": " + "Project updated of id " + id);
-                    return Pages.updateproject.toString();
+                    return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
                 } else
                     throw new BadRequestException("Error updating project");
             } else

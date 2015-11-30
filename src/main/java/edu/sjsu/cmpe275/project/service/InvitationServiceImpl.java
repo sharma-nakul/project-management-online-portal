@@ -61,4 +61,33 @@ public class InvitationServiceImpl implements IInvitationService {
         return invitationDao.getInvitations(id);
     }
 
+    @Transactional("transManager")
+    @Override
+    public List<User> getNonParticipants(long id) {
+        List<User> participants = getParticipantList(id);
+        List<User> allUsers = invitationDao.getAllUser();
+        allUsers.removeAll(participants);
+        allUsers.remove(getProject(id).getOwner());
+        return allUsers;
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public Project getProject(long id) {
+        return invitationDao.getProject(id);
+    }
+
+    @Transactional("transManager")
+    @Override
+    public List<User> getParticipantList(long projectId) {
+        List<User> participantList=new ArrayList<>();
+        List<Invitation> invitationList = invitationDao.getProjectParticipantList(projectId);
+        for (Invitation invitation : invitationList) {
+            participantList.add(invitation.getParticipant());
+        }
+        if(participantList.size()>0)
+            logger.info("User list returned for a project id "+projectId);
+        return participantList;
+    }
+
 }

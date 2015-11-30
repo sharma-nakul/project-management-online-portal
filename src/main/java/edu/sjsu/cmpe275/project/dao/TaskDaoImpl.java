@@ -1,6 +1,7 @@
 package edu.sjsu.cmpe275.project.dao;
 
-import edu.sjsu.cmpe275.project.model.Report;
+import edu.sjsu.cmpe275.project.model.Invitation;
+import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.model.Task;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -8,10 +9,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.hibernate.transform.Transformers;
+import edu.sjsu.cmpe275.project.model.Report;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +56,10 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
                 currentTaskInfo.setActual(task.getActual());
             if (task.getEstimate() != currentTaskInfo.getEstimate())
                 currentTaskInfo.setEstimate(task.getEstimate());
-            if (task.getAssignee().getId() != currentTaskInfo.getAssignee().getId())
+            //if (task.getAssignee().getId() != currentTaskInfo.getAssignee().getId())
                 currentTaskInfo.setAssignee(task.getAssignee());
+            if (task.getState() != currentTaskInfo.getState())
+                currentTaskInfo.setState((task.getState()));
             session = getSession();
             session.update(currentTaskInfo);
             session.flush();
@@ -83,6 +87,7 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
     }
 
 
+
     @Override
     public Task getTaskById(long taskId) {
         session = getSession();
@@ -95,23 +100,23 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
     }
 
     @Override
-    public long countFinishedTaskByProject(long projectId) {
-        session = getSession();
-        Criteria criteria = session.createCriteria(Task.class);
+    public long countFinishedTaskByProject(long projectId){
+        session=getSession();
+        Criteria criteria=session.createCriteria(Task.class);
         criteria.setProjection(Projections.rowCount());
         criteria.add(Restrictions.eq("state", Task.TaskState.FINISHED));
-        criteria.add(Restrictions.eq("project.id", projectId));
-        return (long) criteria.uniqueResult();
+        criteria.add(Restrictions.eq("project.id",projectId));
+        return (long)criteria.uniqueResult();
     }
 
     @Override
-    public long countUnfinishedTaskByProject(long projectId) {
-        session = getSession();
-        Criteria criteria = session.createCriteria(Task.class);
+    public long countUnfinishedTaskByProject(long projectId){
+        session=getSession();
+        Criteria criteria=session.createCriteria(Task.class);
         criteria.setProjection(Projections.rowCount());
         criteria.add(Restrictions.ne("state", Task.TaskState.FINISHED));
         criteria.add(Restrictions.eq("project.id", projectId));
-        return (long) criteria.uniqueResult();
+        return (long)criteria.uniqueResult();
     }
 
     @Override
@@ -138,7 +143,7 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
         session = getSession();
         Criteria c1 = session.createCriteria(Task.class);
         c1.setProjection(Projections.projectionList()
-                .add(Projections.groupProperty("assignee.id"), "userId")
+                .add(Projections.groupProperty("assignee"), "user")
                 .add(Projections.rowCount(), "count"));
         c1.add(Restrictions.eq("state", Task.TaskState.FINISHED));
         c1.add(Restrictions.eq("project.id", projectId));
@@ -146,5 +151,28 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
         List<Report> reportList = new ArrayList<>();
         reportList.addAll((List<Report>) c1.list());
         return reportList;
+    }
+
+    @Override
+    public List<Invitation> getProjectParticipantList (long projectId){
+        session = getSession();
+        Criteria criteria=session.createCriteria(Invitation.class);
+        criteria.add(Restrictions.eq("project.id", projectId));
+        criteria.add(Restrictions.eq("requestStatus", true));
+        List<Invitation> acceptedProjectInvitation=(ArrayList<Invitation>) criteria.list();
+        if (acceptedProjectInvitation.size() > 0)
+            logger.info("Database returned participant list of project id" + projectId);
+        return acceptedProjectInvitation;
+    }
+
+    @Override
+    public Project getProject(long id) {
+        session = getSession();
+        Project project = (Project) session.get(Project.class, id);
+        if (project == null)
+            logger.info("Returns null while retrieving the project id " + id);
+        else
+            logger.info("Id " + id + " of a project exists in database.");
+        return project;
     }
 }

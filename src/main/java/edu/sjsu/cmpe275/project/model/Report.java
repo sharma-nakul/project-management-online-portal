@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Report {
     private long count;
-    private long userId;
+    private User user;
 
     public long getCount() {
         return count;
@@ -18,11 +18,11 @@ public class Report {
         this.count = count;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

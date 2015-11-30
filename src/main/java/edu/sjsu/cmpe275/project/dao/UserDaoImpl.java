@@ -65,6 +65,7 @@ public class UserDaoImpl extends AbstractDao implements IUserDao {
         return user;
     }
 
+
     @Override
     public User getUserByEmailId(String email) {
         session = getSession();

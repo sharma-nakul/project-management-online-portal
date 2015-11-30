@@ -5,6 +5,7 @@ import java.util.List;
 
 import java.util.ArrayList;
 
+import edu.sjsu.cmpe275.project.model.Project;
 import edu.sjsu.cmpe275.project.model.Task;
 import edu.sjsu.cmpe275.project.model.User;
 import org.hibernate.*;
@@ -89,4 +90,34 @@ public class InvitationDaoImpl extends AbstractDao implements IInvitationDao{
         }
     }
 
+
+    @Override
+    public List<User> getAllUser() {
+        session = getSession();
+        List<User> userList=(ArrayList<User>) session.createCriteria(User.class).list();
+        return userList;
+    }
+
+    @Override
+    public Project getProject(long id) {
+        session = getSession();
+        Project project = (Project) session.get(Project.class, id);
+        if (project == null)
+            logger.info("Returns null while retrieving the project id " + id);
+        else
+            logger.info("Id " + id + " of a project exists in database.");
+        return project;
+    }
+
+    @Override
+    public List<Invitation> getProjectParticipantList (long projectId){
+        session = getSession();
+        Criteria criteria=session.createCriteria(Invitation.class);
+        criteria.add(Restrictions.eq("project.id", projectId));
+        criteria.add(Restrictions.eq("requestStatus", true));
+        List<Invitation> acceptedProjectInvitation=(ArrayList<Invitation>) criteria.list();
+        if (acceptedProjectInvitation.size() > 0)
+            logger.info("Database returned participant list of project id" + projectId);
+        return acceptedProjectInvitation;
+    }
 }
