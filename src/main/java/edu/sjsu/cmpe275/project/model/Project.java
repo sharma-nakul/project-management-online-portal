@@ -71,6 +71,9 @@ public class Project implements Serializable {
         this.state = state;
     }
 
+    public boolean isSelected(String state) {
+        return this.state.toString().equals(state);
+    }
 
     public ProjectState getState() {
         return state;

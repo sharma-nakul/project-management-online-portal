@@ -75,6 +75,7 @@ public class TaskController {
         List<User> users = taskService.getParticipantList(taskService.getTaskById(Long.valueOf(id)).getProject().getId());
         users.add(taskService.getTaskById(Long.valueOf(id)).getProject().getOwner());
         model.addAttribute("users", users);
+        model.addAttribute("task", taskService.getTaskById(Long.valueOf(id)));
         return Pages.updatetask.toString();
     }
 

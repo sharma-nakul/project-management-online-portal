@@ -29,20 +29,20 @@
                     <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;">
                         <tr>
                             <td style="font-size: 18px">Title</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{title}"/></td>
+                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" id="title" name="title" th:value="${project.title}" /></td>
                         </tr>
                         <tr>
                             <td style="font-size: 18px">Description</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{description}"/></td>
+                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" id="description" name="description" th:value="${project.description}"/></td>
                         </tr>
                         <tr>
                             <td style="font-size: 18px">State</td>
                             <td style="font-size: 18px; padding: 10px">
-                                <select style="font-size: 14px" th:field="*{state}">
-                                    <option value="PLANNING">PLANNING</option>
-                                    <option value="ONGOING">ONGOING</option>
-                                    <option value="CANCELLED">CANCELLED</option>
-                                    <option value="COMPLETED">COMPLETED</option>
+                                <select style="font-size: 14px" id="state" name="state">
+                                    <option th:selected="${project.isSelected('PLANNING')}" value="PLANNING">PLANNING</option>
+                                    <option th:selected="${project.isSelected('ONGOING')}" value="ONGOING">ONGOING</option>
+                                    <option th:selected="${project.isSelected('CANCELLED')}" value="CANCELLED">CANCELLED</option>
+                                    <option th:selected="${project.isSelected('COMPLETED')}" value="COMPLETED">COMPLETED</option>
                                 </select>
                             </td>
                         </tr>

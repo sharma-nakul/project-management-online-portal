@@ -76,6 +76,17 @@ public class Task implements Serializable {
         this.project = project;
     }
 
+    public boolean isSelected(String state) {
+        if (this.state == null) {
+            return false;
+        }
+        return this.state.toString().equals(state);
+    }
+
+    public boolean isSelectedAssignee(long id) {
+        return this.assignee.getId() == id;
+    }
+
     public long getId() {
         return id;
     }

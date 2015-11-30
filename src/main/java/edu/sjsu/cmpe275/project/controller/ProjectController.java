@@ -125,8 +125,9 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/updateproject", method = RequestMethod.GET)
-    public String showUpdateProject(@RequestParam("id") String id, Project project, HttpServletRequest request) {
+    public String showUpdateProject(@RequestParam("id") String id, Project project, Model model, HttpServletRequest request) {
         logger.info("Redirecting to " + request.getRequestURL());
+        model.addAttribute("project", projectService.getProject(Long.valueOf(id)));
         return Pages.updateproject.toString();
     }
 

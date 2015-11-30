@@ -264,6 +264,7 @@ public class UserController {
                 throw new IllegalStateException("Session doesn't exist");
             User loggedinUser = (User) session.getAttribute(userSession);
             if (loggedinUser != null) {
+                model.addAttribute("user", loggedinUser);
                 return Pages.updateuser.toString();
             } else
                 throw new IllegalStateException("Session doesn't exist");

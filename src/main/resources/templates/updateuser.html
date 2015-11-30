@@ -28,15 +28,15 @@
                     <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;" >
                         <tr>
                             <td style="font-size: 18px">Name</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{name}" /></td>
+                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" id="name" name="name" th:value="${user.name}" /></td>
                         </tr>
                         <tr>
                             <td style="font-size: 18px">Email</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{email}" /></td>
+                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" id="email" name="email" th:value="${user.email}" /></td>
                         </tr>
                         <tr>
                             <td style="font-size: 18px">New Password</td>
-                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="password" th:field="*{password}" /></td>
+                            <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="password" id="password" name="password" th:value="${user.password}" /></td>
                         </tr>
                     </table>
 

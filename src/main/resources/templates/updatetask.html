@@ -29,38 +29,37 @@
                 <table style="color:#408080; font-family:Arial, 'Times New Roman',Times, serif;">
                     <tr>
                         <td style="font-size: 18px">Title</td>
-                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{title}"/></td>
+                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" id="title" name="title" th:value="${task.title}" /></td>
                     </tr>
                     <tr>
                         <td style="font-size: 18px">Description</td>
-                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{description}"/></td>
+                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" id="description" name="description" th:value="${task.description}" /></td>
                     </tr>
                     <tr>
                         <td style="font-size: 18px">Estimated Work</td>
-                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" th:field="*{estimate}"/></td>
+                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text" id="estimate" name="estimate" th:value="${task.estimate}" /></td>
                     </tr>
                     <tr>
                         <td style="font-size: 18px">Actual Work</td>
-                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text"
-                                                                          th:field="*{actual}"/></td>
+                        <td style="font-size: 18px; padding: 10px"><input style="font-size: 14px" type="text"  id="actual" name="actual" th:value="${task.actual}"/></td>
                     </tr>
                     <tr>
                         <td style="font-size: 18px">Assignee</td>
                         <td style="font-size: 18px; padding: 10px">
                             <select style="font-size: 14px" th:field="*{assignee.id}">
-                                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}">Wireframe</option>
+                                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}" th:selected="${task.isSelectedAssignee(user.id)}" >Wireframe</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <td style="font-size: 18px">State</td>
                         <td style="font-size: 18px; padding: 10px">
-                            <select style="font-size: 14px" th:field="*{state}">
-                                <option value="NEW">NEW</option>
-                                <option value="ASSIGNED">ASSIGNED</option>
-                                <option value="STARTED">STARTED</option>
-                                <option value="FINISHED">FINISHED</option>
-                                <option value="CANCELLED">CANCELLED</option>
+                            <select style="font-size: 14px" id="state" name="state">
+                                <option th:selected="${task.isSelected('NEW')}" value="NEW">NEW</option>
+                                <option th:selected="${task.isSelected('ASSIGNED')}" value="ASSIGNED">ASSIGNED</option>
+                                <option th:selected="${task.isSelected('STARTED')}" value="STARTED">STARTED</option>
+                                <option th:selected="${task.isSelected('FINISHED')}" value="FINISHED">FINISHED</option>
+                                <option th:selected="${task.isSelected('CANCELLED')}" value="CANCELLED">CANCELLED</option>
                             </select>
                         </td>
                     </tr>
