@@ -11,14 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * @author Naks
@@ -140,6 +136,35 @@ public class TaskController {
         } catch (Exception e) {
             logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
             return Pages.error.toString();
+        }
+    }
+
+    @RequestMapping(value = "/project_report", method = RequestMethod.GET)
+    public String getProjectReport(@RequestParam("id")String projectId, HttpServletRequest request, Model model) {
+        try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if (user != null) {
+                long countUnfinishedTaskByProject = taskService.countUnfinishedTaskByProject(Long.valueOf(projectId));
+                long countFinishedTaskByProject = taskService.countFinishedTaskByProject(Long.valueOf(projectId));
+                long countAllTaskByProject=taskService.countAllTaskByProject(Long.valueOf(projectId));
+                long countAllCancelledTaskByProject =taskService.countAllCancelledTaskByProject(Long.valueOf(projectId));
+                model.addAttribute("unfinishedTaskCount", countUnfinishedTaskByProject);
+                model.addAttribute("finishedTaskCount", countFinishedTaskByProject);
+                model.addAttribute("allTaskCount", countAllTaskByProject);
+                model.addAttribute("cancelledTaskCount", countAllCancelledTaskByProject);
+                logger.info(request.getRequestURL() + ": Tasks count returned for project id " + projectId);
+                return Pages.reports.toString();
+            } else
+                throw new IllegalStateException("Session doesn't exist");
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
+        } catch (IllegalStateException e) {
+            logger.error("IllegalStateException: " + request.getRequestURL() + ": " + e.getMessage());
+            return "redirect:/" + Pages.login.toString();
         }
     }
 

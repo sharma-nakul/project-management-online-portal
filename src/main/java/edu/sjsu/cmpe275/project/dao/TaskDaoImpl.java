@@ -110,4 +110,22 @@ public class TaskDaoImpl extends AbstractDao implements ITaskDao {
         return (long)criteria.uniqueResult();
     }
 
+    @Override
+    public long countAllTaskByProject(long projectId){
+        session=getSession();
+        Criteria criteria=session.createCriteria(Task.class);
+        criteria.setProjection(Projections.rowCount());
+        criteria.add(Restrictions.eq("project.id", projectId));
+        return (long)criteria.uniqueResult();
+    }
+
+    @Override
+    public long countAllCancelledTaskByProject(long projectId){
+        session=getSession();
+        Criteria criteria=session.createCriteria(Task.class);
+        criteria.setProjection(Projections.rowCount());
+        criteria.add(Restrictions.eq("state", Task.TaskState.CANCELLED));
+        criteria.add(Restrictions.eq("project.id", projectId));
+        return (long)criteria.uniqueResult();
+    }
 }

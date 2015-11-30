@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * @author Naks
  *         Handler class for Task. The class intercept REST call to persist or retrieve data.
@@ -65,4 +63,17 @@ public class TaskServiceImpl implements ITaskService {
     public long countUnfinishedTaskByProject(long projectId){
         return taskDao.countUnfinishedTaskByProject(projectId);
     }
+
+    @Transactional(value = "transManager")
+    @Override
+    public long countAllTaskByProject(long projectId){
+        return taskDao.countAllTaskByProject(projectId);
+    }
+
+    @Transactional(value = "transManager")
+    @Override
+    public long countAllCancelledTaskByProject(long projectId){
+        return taskDao.countAllCancelledTaskByProject(projectId);
+    }
+
 }

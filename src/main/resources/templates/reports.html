@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Project Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2>Report Page</h2>
+<div>
+    <table>
+        <tr>
+            <td>Unfinished Task</td>
+            <td th:text="${unfinishedTaskCount}"></td>
+        </tr>
+        <tr>
+            <td>Finished Task</td>
+            <td th:text="${finishedTaskCount}"></td>
+        </tr>
+        <tr>
+            <td>Cancelled Task</td>
+            <td th:text="${cancelledTaskCount}"></td>
+        </tr>
+        <tr>
+            <td>Total Count</td>
+            <td th:text="${allTaskCount}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
