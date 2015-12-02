@@ -39,14 +39,17 @@
                     <td style="font-size: 18px; padding-top: 10px">Cancelled Tasks:</td>
                     <td style="font-size: 18px; padding-top: 10px" th:text="${cancelledTaskCount}"></td>
                 </tr>
-                <tr>
-                    <td style="font-size: 18px; padding-top: 10px" >User</td>
-                    <td style="font-size: 18px; padding-top: 10px">Completed Tasks</td>
-                </tr>
-                <tr th:each="report : ${userFinishedTask}">
-                    <td style="font-size: 18px; padding-top: 10px" th:text="${report.user.name}"></td>
-                    <td style="font-size: 18px; padding-top: 10px" th:text="${report.count}"></td>
-                </tr>
+                <tr th:colspan="2"><br/><br/>
+                    <table >
+                        <tr><th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 300px; height: 30px; font-size: 16px">USER</th>
+                            <th style="border: 3px; border-color: steelblue; border-style: solid; color: #ffffff;background-color: steelblue; width: 700px; height: 30px; font-size: 16px">COMPLETED TASKS</th>
+                        </tr>
+                        <tr th:each="report : ${userFinishedTask}">
+                            <td th:text="${report.user.name}"  style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 18px" ></td>
+                            <td th:text="${report.count}" style="border: 3px; color:steelblue; border-color: steelblue; border-style: solid; width: 300px; height: 30px; font-size: 18px" ></td>
+                        </tr>
+                    </table></tr>
+
             </table>
 
         </div>
