@@ -6,7 +6,30 @@
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/Application.java</file>
           <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/HibernateConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/AspectConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/aspects/ProjectAspect.aj</file>
         </fileset>
+      </configuration>
+    </facet>
+    <facet type="AspectJ" name="AspectJ">
+      <configuration>
+        <option name="aspectPath">
+          <projectLibrary>
+            <option name="name" value="Gradle: org.aspectj:aspectjrt:1.8.7" />
+          </projectLibrary>
+          <projectLibrary>
+            <option name="name" value="Gradle: org.aspectj:aspectjweaver:1.8.7" />
+          </projectLibrary>
+          <projectLibrary>
+            <option name="name" value="Gradle: org.springframework:spring-aop:4.2.2.RELEASE" />
+          </projectLibrary>
+          <projectLibrary>
+            <option name="name" value="Gradle: org.springframework:spring-aspects:4.1.8.RELEASE" />
+          </projectLibrary>
+          <projectLibrary>
+            <option name="name" value="Gradle: antlr:antlr:2.7.7" />
+          </projectLibrary>
+        </option>
       </configuration>
     </facet>
   </component>
@@ -99,5 +122,7 @@
     <orderEntry type="library" name="Gradle: ognl:ognl:3.0.8" level="project" />
     <orderEntry type="library" name="Gradle: org.unbescape:unbescape:1.1.0.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: javax.ws.rs:jsr311-api:0.11" level="project" />
+    <orderEntry type="library" name="Gradle: javax.mail:mail:1.4" level="project" />
+    <orderEntry type="library" name="Gradle: javax.activation:activation:1.1" level="project" />
   </component>
 </module>
