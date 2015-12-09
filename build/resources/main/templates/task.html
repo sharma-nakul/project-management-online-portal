@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Project Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2>View Task by Project Id</h2>
+<div>
+    <table>
+        <tr>
+            <td>Title</td>
+            <td>Description</td>
+        </tr>
+        <tr th:each="task : ${projectTaskList}">
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.description}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

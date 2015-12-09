@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -135,14 +136,64 @@ public class ProjectController {
     public String updateProject(@RequestParam("id") String id,
                              @ModelAttribute(value = "project") Project project, HttpServletRequest request, Model model) {
         try {
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+
             if (project != null) {
-                project.setId(Long.valueOf(id));
-                boolean status = projectService.editProject(project);
-                if (status) {
-                    logger.info(request.getRequestURL() + ": " + "Project updated of id " + id);
-                    return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
-                } else
-                    throw new BadRequestException("Error updating project");
+                if(!(projectService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.COMPLETED)||projectService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.CANCELLED))) {
+                    if(!projectService.getProject(Long.valueOf(id)).getState().equals(project.getState())&&project.getState().equals(Project.ProjectState.CANCELLED)
+                            &&!projectService.getProject(Long.valueOf(id)).getOwner().equals(user)){
+                        throw new BadRequestException("Project can only be cancelled by the Owner");
+                    }
+                    if (!projectService.getProject(Long.valueOf(id)).getState().equals(project.getState()) &&
+                            projectService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.PLANNING)
+                            && project.getState().equals(Project.ProjectState.ONGOING)){
+                        List<Task> tasks=projectService.getTaskByProjectId(Long.valueOf(id));
+                        for (Task task : tasks) {
+                            if(!(task.getAssignee()!=null&&task.getState().equals(Task.TaskState.ASSIGNED)&&task.getEstimate()!=0)){
+                                throw new BadRequestException("Project can be moved to ongoing only if all tasks in assigned state");
+                            }
+                        }
+                    }
+
+                    if (!projectService.getProject(Long.valueOf(id)).getState().equals(project.getState()) &&
+                            projectService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.ONGOING)
+                            && project.getState().equals(Project.ProjectState.COMPLETED)) {
+                        if(user.equals(projectService.getProject(Long.valueOf(id)).getOwner())) {
+                            List<Task> tasks = projectService.getTaskByProjectId(Long.valueOf(id));
+                            int count = 0;
+                            for (Task task : tasks) {
+                                if (!(task.getState().equals(Task.TaskState.CANCELLED) || task.getState().equals(Task.TaskState.FINISHED))) {
+                                    //every task should be finished or cancelled to move from ongoing to finished
+                                    throw new BadRequestException("Every task should be finished or cancelled to move from ongoing to finished");
+                                }
+                                if (task.getState().equals(Task.TaskState.FINISHED)) {
+                                    count++;
+                                }
+
+                            }
+                            if (count < 1) {
+                                //there should be atleast one finished task to move from ongoing to finished
+                                throw new BadRequestException("There should be atleast one finished task to move from ongoing to finished");
+                            }
+                        }
+                        else
+                            throw new BadRequestException("Only the owner can move from ongoing to finished");
+                    }
+
+                    project.setId(Long.valueOf(id));
+                    boolean status = projectService.editProject(project);
+                    if (status) {
+                        logger.info(request.getRequestURL() + ": " + "Project updated of id " + id);
+                        return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
+                    } else
+                        throw new BadRequestException("Error updating project");
+                }
+                else
+                    //write a statement to throw exception
+                    throw new BadRequestException("Project in Finished/Cancelled state cann't be updated");
             } else
                 throw new BadRequestException("Required fields are missing while updating project", HttpStatus.BAD_REQUEST.value(), "mandatory");
         } catch (BadRequestException e) {

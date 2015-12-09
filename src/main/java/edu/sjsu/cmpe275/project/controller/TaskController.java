@@ -47,6 +47,7 @@ public class TaskController {
     public String addTask(@RequestParam("id") String id,
             @ModelAttribute(value = "task") Task task, HttpServletRequest request, Model model) {
         try {
+            if(taskService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.PLANNING)){
             if (!task.getTitle().isEmpty() && !task.getDescription().isEmpty()) {
                 session = request.getSession();
                 task.setState(Task.TaskState.NEW);
@@ -57,7 +58,14 @@ public class TaskController {
                 return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
             } else
                 throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
-        } catch (BadRequestException e) {
+       }
+            else
+            {
+                //add error
+                throw new BadRequestException("Can add a task only in the planning state");
+            }
+        }
+            catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("taskCreationError", true);
             model.addAttribute("badException", e);
@@ -83,16 +91,65 @@ public class TaskController {
     public String updateTask(@RequestParam("id") String id,
                              @ModelAttribute(value = "task") Task task, HttpServletRequest request, Model model) {
         try {
-            if (task != null) {
-                task.setId(Long.valueOf(id));
-                boolean status = taskService.editTask(task);
-                if (status) {
-                    logger.info(request.getRequestURL() + ": " + "Task updated of id " + id);
-                    return "redirect:/" + Pages.viewproject.toString() + "?id=" + taskService.getTaskById(Long.valueOf(id)).getProject().getId();
+            session = request.getSession();
+            if (session == null)
+                throw new IllegalStateException("Session doesn't exist");
+            User user = (User) session.getAttribute(userSession);
+            if(!(taskService.getTaskById(Long.valueOf(id)).getProject().getState().equals(Project.ProjectState.COMPLETED)
+                    ||taskService.getTaskById(Long.valueOf(id)).getProject().getState().equals(Project.ProjectState.CANCELLED))) {
+                if(taskService.getTaskById(Long.valueOf(id)).getState().equals(Task.TaskState.CANCELLED)||
+                        taskService.getTaskById(Long.valueOf(id)).getState().equals(Task.TaskState.FINISHED)){
+                    throw new BadRequestException("Task in Finished/Cancelled state cann't be updated");
+                }
+                else{
+                    if(taskService.getTaskById(Long.valueOf(id)).getState().equals(Task.TaskState.STARTED)&&
+                            task.getState().equals(Task.TaskState.NEW)){
+                        throw new BadRequestException("Task cann't be changed from Started state to New state");
+                    }
+                    if(taskService.getTaskById(Long.valueOf(id)).getState().equals(Task.TaskState.ASSIGNED)&&
+                            task.getState().equals(Task.TaskState.NEW)){
+                        throw new BadRequestException("Task cann't be changed from Assigned state to New state");
+                    }
+                    if(taskService.getTaskById(Long.valueOf(id)).getState().equals(Task.TaskState.STARTED)&&
+                            task.getState().equals(Task.TaskState.ASSIGNED)){
+                        throw new BadRequestException("Task cann't be changed from Started state to Assigned state");
+                    }
+                }
+                if (!taskService.getTaskById(Long.valueOf(id)).getState().equals(task.getState()) && task.getState().equals(Task.TaskState.CANCELLED)
+                        && !taskService.getTaskById(Long.valueOf(id)).getProject().getOwner().equals(user)) {
+                    //error displaying message
+                    throw new BadRequestException("Only the owner can cancel a task");
+                }
+
+            if(taskService.getTaskById(Long.valueOf(id)).getProject().getState().equals(Project.ProjectState.ONGOING))
+                {
+
+                    if(taskService.getTaskById(Long.valueOf(id)).getEstimate()!=task.getEstimate())
+                        //error displaying message
+                        throw new BadRequestException("The Estimate cann't be changed when ongoing");
+                }
+                if (task != null) {
+
+                    task.setId(Long.valueOf(id));
+                    boolean status = taskService.editTask(task);
+                    if ((task.getState().equals(Task.TaskState.CANCELLED) || task.getState().equals(Task.TaskState.FINISHED))) {
+                        logger.info("*********************current task*************" + task.getId());
+                    }
+                    if (status) {
+                        logger.info(request.getRequestURL() + ": " + "Task updated of id " + id);
+                        return "redirect:/" + Pages.viewproject.toString() + "?id=" + taskService.getTaskById(Long.valueOf(id)).getProject().getId();
+                    } else
+                        throw new BadRequestException("Error updating task");
                 } else
-                    throw new BadRequestException("Error updating task");
-            } else
-                throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
+                    throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
+            }
+            else{
+              //  if(taskService.getTaskById(Long.valueOf(id)).getAssignee()!=task.getAssignee())
+                //    throw new BadRequestException("Assignee cann't be changed when the project state is finished/cancelled");
+                //write a statement to throw exception
+                throw new BadRequestException("project in Finished/Cancelled state cann't be updated");
+            }
+
         } catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("taskUpdateError", true);
@@ -129,20 +186,30 @@ public class TaskController {
     } */
 
     @RequestMapping(value = "/removetask/{id}", method = RequestMethod.POST)
-    public String showDeleteTask(@PathVariable("id") String id, HttpServletRequest request) {
+    public String showDeleteTask(@PathVariable("id") String id, HttpServletRequest request, Model model) {
         try {
-            long projectId = taskService.getTaskById(Long.valueOf(id)).getProject().getId();
-            boolean status = taskService.removeTaskById(Long.valueOf(id));
-            if (status) {
-                logger.info(request.getRequestURL() + ": " + "Task deleted of id " + id);
-                return "redirect:/" + Pages.viewproject.toString() + "?id=" + projectId;
-            } else
-                throw new BadRequestException("Error deleting task");
+            if(taskService.getTaskById(Long.valueOf(id)).getProject().getState().equals(Project.ProjectState.PLANNING)){
+                long projectId = taskService.getTaskById(Long.valueOf(id)).getProject().getId();
+                boolean status = taskService.removeTaskById(Long.valueOf(id));
+                if (status) {
+                    logger.info(request.getRequestURL() + ": " + "Task deleted of id " + id);
+                    return "redirect:/" + Pages.viewproject.toString() + "?id=" + projectId;
+                } else
+                    throw new BadRequestException("Error deleting task");
+           }
+            else
+            {
+                //add error
+                throw new BadRequestException("Can delete a task only in the planning state");
+            }
         } catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
+            model.addAttribute("taskDeletionError", true);
+            model.addAttribute("badException", e);
             return Pages.task.toString();
         } catch (Exception e) {
             logger.error("Exception: " + request.getRequestURL() + ": " + e.getMessage());
+            e.printStackTrace();
             return Pages.error.toString();
         }
     }

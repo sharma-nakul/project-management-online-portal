@@ -6,8 +6,7 @@
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/Application.java</file>
           <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/HibernateConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/AspectConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/aspects/ProjectAspect.aj</file>
+          <file>file://$MODULE_DIR$/src/main/java/edu/sjsu/cmpe275/project/aspects/UserAspect.java</file>
         </fileset>
       </configuration>
     </facet>
