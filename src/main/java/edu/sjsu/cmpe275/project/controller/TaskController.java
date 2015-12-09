@@ -47,17 +47,27 @@ public class TaskController {
     public String addTask(@RequestParam("id") String id,
             @ModelAttribute(value = "task") Task task, HttpServletRequest request, Model model) {
         try {
-            if (!task.getTitle().isEmpty() && !task.getDescription().isEmpty()) {
-                session = request.getSession();
-                task.setState(Task.TaskState.NEW);
-                task.setProject(taskService.getProject(Long.valueOf(id)));
-                long taskId = taskService.createTask(task);
-                session.setAttribute("taskId", taskId);
-                logger.info(request.getRequestURL() + ": " + "Task created of id " + taskId);
-                return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
-            } else
-                throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
-        } catch (BadRequestException e) {
+            Project project = taskService.getProject(Long.valueOf(id));
+            System.out.println(project.getState());
+            if (project.getState().equals(Project.ProjectState.PLANNING)) {
+
+                if (!task.getTitle().isEmpty() && !task.getDescription().isEmpty()) {
+                    session = request.getSession();
+                    task.setState(Task.TaskState.NEW);
+                    System.out.println("Before Execution");
+                    task.setProject(taskService.getProject(Long.valueOf(id)));
+                    long taskId = taskService.createTask(task);
+                    session.setAttribute("taskId", taskId);
+                    logger.info(request.getRequestURL() + ": " + "Task created of id " + taskId);
+                    return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
+                } else
+                    throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
+            } else {
+                System.out.println("Project should be in planning state");
+                return "redirect:/" + Pages.projects.toString();
+            }
+        }
+    catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("taskCreationError", true);
             model.addAttribute("badException", e);
@@ -131,13 +141,24 @@ public class TaskController {
     @RequestMapping(value = "/removetask/{id}", method = RequestMethod.POST)
     public String showDeleteTask(@PathVariable("id") String id, HttpServletRequest request) {
         try {
-            long projectId = taskService.getTaskById(Long.valueOf(id)).getProject().getId();
-            boolean status = taskService.removeTaskById(Long.valueOf(id));
-            if (status) {
-                logger.info(request.getRequestURL() + ": " + "Task deleted of id " + id);
+            session = request.getSession();
+            User user = (User) session.getAttribute(userSession);
+            System.out.println("USERID:" + user.getId());
+            Project project = taskService.getTaskById(Long.valueOf(id)).getProject();
+            long projectId = project.getId();
+            if(user.getId() == project.getOwner().getId()) {
+                if (project.getState().equals(Project.ProjectState.PLANNING)) {
+                    boolean status = taskService.removeTaskById(Long.valueOf(id));
+                    if (status) {
+                        logger.info(request.getRequestURL() + ": " + "Task deleted of id " + id);
+                        return "redirect:/" + Pages.viewproject.toString() + "?id=" + projectId;
+                    } else
+                        throw new BadRequestException("Error deleting task");
+                } else
+                    return "redirect:/" + Pages.projects.toString();
+            }
+            else
                 return "redirect:/" + Pages.viewproject.toString() + "?id=" + projectId;
-            } else
-                throw new BadRequestException("Error deleting task");
         } catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             return Pages.task.toString();

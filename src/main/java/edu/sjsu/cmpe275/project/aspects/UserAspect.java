@@ -34,4 +34,26 @@ public class UserAspect {
         String email = args[0].toString();
         logger.info("Aspect: Email Id -" + email);
     }
+
+    /* a. Once project created, Project state should be Planning */
+    /*@Around("execution(long createProject(..))")
+    public void checkStatusAfterCreated(org.aspectj.lang.JoinPoint joinPoint)
+    {
+        System.out.println("**************Before Execution*******");
+
+        Object Args[] = joinPoint.getArgs();
+        Project.ProjectState getProjectStatus = (Project.ProjectState)Args[2];
+        System.out.println("*********Before Print*****");
+        System.out.println(getProjectStatus);
+        System.out.println("Before condition");
+        if(getProjectStatus.compareTo(Project.ProjectState.PLANNING) != 0 ) {
+            System.out.println("Inside Check");
+            System.out.println("Check Project Status");
+        }
+    }*/
+
+
+
+
+
 }

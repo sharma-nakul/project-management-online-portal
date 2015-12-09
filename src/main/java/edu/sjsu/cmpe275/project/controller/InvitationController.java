@@ -3,6 +3,7 @@ package edu.sjsu.cmpe275.project.controller;
 import edu.sjsu.cmpe275.project.exception.BadRequestException;
 import edu.sjsu.cmpe275.project.model.*;
 import edu.sjsu.cmpe275.project.service.IInvitationService;
+import edu.sjsu.cmpe275.project.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class InvitationController {
     private static final String userSession = "userDetails";
     @Autowired
     IInvitationService invitationService;
+
+    @Autowired
+    IUserService userService;
+
     private HttpSession session;
 
     @RequestMapping(value = "/acceptinvitation/{id}", method = RequestMethod.POST)
@@ -97,6 +102,11 @@ public class InvitationController {
                 invitation.setProject(invitationService.getProject(Long.valueOf(id)));
                 invitation.setRequestStatus(false);
                 invitationService.sendInvitation(invitation.getParticipant(), invitation.getProject()) ;
+                Mail sendEmail = new Mail();
+                //System.out.println("ID:" + invitation.getParticipant().getId());
+                User user = userService.getUser(invitation.getParticipant().getId());
+                logger.info("Sending Email to: " + user.getEmail());
+                sendEmail.sendEmail(user.getEmail(),"localhost:8080/login");
                 logger.info(request.getRequestURL() + ": " + "Project updated of id " + id);
                 return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
             } else
@@ -112,5 +122,4 @@ public class InvitationController {
             return Pages.error.toString();
         }
     }
-
 }

@@ -135,17 +135,35 @@ public class ProjectController {
     public String updateProject(@RequestParam("id") String id,
                              @ModelAttribute(value = "project") Project project, HttpServletRequest request, Model model) {
         try {
-            if (project != null) {
-                project.setId(Long.valueOf(id));
-                boolean status = projectService.editProject(project);
-                if (status) {
-                    logger.info(request.getRequestURL() + ": " + "Project updated of id " + id);
-                    return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
-                } else
-                    throw new BadRequestException("Error updating project");
-            } else
-                throw new BadRequestException("Required fields are missing while updating project", HttpStatus.BAD_REQUEST.value(), "mandatory");
-        } catch (BadRequestException e) {
+            Long projectID = Long.valueOf(id);
+            Project databaseEntry = projectService.getProject(projectID);
+            System.out.println(databaseEntry.getId());
+            Project.ProjectState projectStateDB = databaseEntry.getState();
+            /*if (projectStateDB.equals(Project.ProjectState.PLANNING)) {
+
+                List<Task> allProjectTasks = projectService.getTaskByProjectId(projectID);
+                boolean bFlag = false;
+                for(Task task:allProjectTasks)
+                {
+                    if(task.getState()!= null && task.getAssignee()!= null && task.getEstimate()!= 0);
+                    else
+                        bFlag = true;
+                }
+                if(!bFlag) {*/
+                    if (project != null) {
+                        project.setId(Long.valueOf(id));
+                        System.out.println("Long Value:" + Long.valueOf(id));
+                        boolean status = projectService.editProject(project);
+                        if (status) {
+                            logger.info(request.getRequestURL() + ": " + "Project updated of id " + id);
+                            return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
+                        } else
+                            throw new BadRequestException("Error updating project");
+                    } else
+                        throw new BadRequestException("Required fields are missing while updating project", HttpStatus.BAD_REQUEST.value(), "mandatory");
+                }
+
+        catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("projectUpdateError", true);
             model.addAttribute("badException", e);
