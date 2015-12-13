@@ -47,7 +47,7 @@ public class TaskController {
     public String addTask(@RequestParam("id") String id,
             @ModelAttribute(value = "task") Task task, HttpServletRequest request, Model model) {
         try {
-            if(taskService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.PLANNING)){
+          //  if(taskService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.PLANNING)){
             if (!task.getTitle().isEmpty() && !task.getDescription().isEmpty()) {
                 session = request.getSession();
                 task.setState(Task.TaskState.NEW);
@@ -58,12 +58,12 @@ public class TaskController {
                 return "redirect:/" + Pages.viewproject.toString() + "?id=" + id;
             } else
                 throw new BadRequestException("Required fields are missing", HttpStatus.BAD_REQUEST.value(), "mandatory");
-       }
+    /*   }
             else
             {
                 //add error
                 throw new BadRequestException("Can add a task only in the planning state");
-            }
+            }*/
         }
             catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
@@ -116,7 +116,7 @@ public class TaskController {
                     }
                 }
                 if (!taskService.getTaskById(Long.valueOf(id)).getState().equals(task.getState()) && task.getState().equals(Task.TaskState.CANCELLED)
-                        && !taskService.getTaskById(Long.valueOf(id)).getProject().getOwner().equals(user)) {
+                        && !taskService.getTaskById(Long.valueOf(id)).getProject().getOwner().getEmail().equals(user.getEmail())) {
                     //error displaying message
                     throw new BadRequestException("Only the owner can cancel a task");
                 }
@@ -188,7 +188,7 @@ public class TaskController {
     @RequestMapping(value = "/removetask/{id}", method = RequestMethod.POST)
     public String showDeleteTask(@PathVariable("id") String id, HttpServletRequest request, Model model) {
         try {
-            if(taskService.getTaskById(Long.valueOf(id)).getProject().getState().equals(Project.ProjectState.PLANNING)){
+          //  if(taskService.getTaskById(Long.valueOf(id)).getProject().getState().equals(Project.ProjectState.PLANNING)){
                 long projectId = taskService.getTaskById(Long.valueOf(id)).getProject().getId();
                 boolean status = taskService.removeTaskById(Long.valueOf(id));
                 if (status) {
@@ -196,12 +196,12 @@ public class TaskController {
                     return "redirect:/" + Pages.viewproject.toString() + "?id=" + projectId;
                 } else
                     throw new BadRequestException("Error deleting task");
-           }
+        /*   }
             else
             {
                 //add error
                 throw new BadRequestException("Can delete a task only in the planning state");
-            }
+            }*/
         } catch (BadRequestException e) {
             logger.error("BadRequestException: " + request.getRequestURL() + ": " + e.getMessage());
             model.addAttribute("taskDeletionError", true);

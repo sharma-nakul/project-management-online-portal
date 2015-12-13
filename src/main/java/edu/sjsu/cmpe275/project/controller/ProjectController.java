@@ -144,7 +144,7 @@ public class ProjectController {
             if (project != null) {
                 if(!(projectService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.COMPLETED)||projectService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.CANCELLED))) {
                     if(!projectService.getProject(Long.valueOf(id)).getState().equals(project.getState())&&project.getState().equals(Project.ProjectState.CANCELLED)
-                            &&!projectService.getProject(Long.valueOf(id)).getOwner().equals(user)){
+                            &&!projectService.getProject(Long.valueOf(id)).getOwner().getEmail().equals(user.getEmail())){
                         throw new BadRequestException("Project can only be cancelled by the Owner");
                     }
                     if (!projectService.getProject(Long.valueOf(id)).getState().equals(project.getState()) &&
@@ -161,7 +161,7 @@ public class ProjectController {
                     if (!projectService.getProject(Long.valueOf(id)).getState().equals(project.getState()) &&
                             projectService.getProject(Long.valueOf(id)).getState().equals(Project.ProjectState.ONGOING)
                             && project.getState().equals(Project.ProjectState.COMPLETED)) {
-                        if(user.equals(projectService.getProject(Long.valueOf(id)).getOwner())) {
+                        if(user.getEmail().equals(projectService.getProject(Long.valueOf(id)).getOwner().getEmail())) {
                             List<Task> tasks = projectService.getTaskByProjectId(Long.valueOf(id));
                             int count = 0;
                             for (Task task : tasks) {
